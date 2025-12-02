@@ -15,7 +15,8 @@
       "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\data\\constraints.csv\")",
       "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\data\\resource_schedule.csv\")",
       "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\analyze_resources.js\")",
-      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\generate_resource_schedule.js\")"
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\generate_resource_schedule.js\")",
+      "Bash(npx serve -p 8080)"
     ],
     "deny": [],
     "ask": []

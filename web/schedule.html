@@ -257,8 +257,8 @@
         async function loadData() {
             try {
                 const [resourceRes, patientRes] = await Promise.all([
-                    fetch('data/resource_schedule.csv'),
-                    fetch('data/patient_schedule.csv')
+                    fetch('../data/resource_schedule.csv'),
+                    fetch('../data/patient_schedule.csv')
                 ]);
 
                 resourceData = parseCSV(await resourceRes.text());
