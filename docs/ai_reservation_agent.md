@@ -200,3 +200,76 @@ AI_reservation/
 | 2 | 백엔드 서버 구축 | Express + Claude API + MCP 연동 |
 | 3 | 웹 채팅 UI 구현 | HTML/CSS/JS 채팅 인터페이스 |
 | 4 | 통합 테스트 | 전체 흐름 테스트 |
+
+---
+
+## 개발 상세 순서
+
+### 1단계: MCP 서버 구축
+
+```
+mcp-server/
+├── package.json
+└── src/
+    ├── index.js              # MCP 서버 메인
+    ├── data-loader.js        # CSV 파일 로딩
+    └── tools/
+        ├── get-patient-info.js
+        ├── get-exam-constraints.js
+        ├── get-available-slots.js
+        ├── check-conflicts.js
+        └── search-exam-name.js
+```
+
+**순서:**
+1. `package.json` 생성 (의존성: `@modelcontextprotocol/sdk`)
+2. `data-loader.js` - CSV 파일 3개 로딩 및 파싱
+3. 도구 구현 (하나씩):
+   - `get-patient-info.js` - 환자 정보 조회
+   - `get-exam-constraints.js` - 검사 제약조건 조회
+   - `search-exam-name.js` - 유사 검사명 검색
+   - `get-available-slots.js` - 빈 슬롯 조회
+   - `check-conflicts.js` - 충돌 검사
+4. `index.js` - MCP 서버 메인 (도구 등록)
+5. MCP 서버 단독 테스트
+
+---
+
+### 2단계: 백엔드 서버 구축
+
+```
+backend/
+├── package.json
+├── server.js                 # Express 웹서버
+└── claude-client.js          # Claude API + MCP 연동
+```
+
+**순서:**
+1. `package.json` 생성 (의존성: `express`, `@anthropic-ai/sdk`, `@modelcontextprotocol/sdk`)
+2. `claude-client.js` - Claude API 호출 + MCP 도구 연동
+3. `server.js` - Express 서버 (채팅 API 엔드포인트)
+4. `hospital_rules.txt` 자동 로딩 → 프롬프트 삽입 로직
+5. 백엔드 API 테스트
+
+---
+
+### 3단계: 웹 채팅 UI 구현
+
+```
+web/
+└── chat.html                 # 채팅 UI
+```
+
+**순서:**
+1. HTML 구조 (채팅 메시지 영역, 입력창)
+2. CSS 스타일링
+3. JavaScript (메시지 전송, 응답 표시)
+4. 백엔드 API 연동
+
+---
+
+### 4단계: 통합 테스트
+
+1. 전체 흐름 테스트 (환자번호 → 검사명 → 선호 → 추천)
+2. 오류 케이스 테스트 (잘못된 입력 등)
+3. 병원 규칙 변경 테스트
