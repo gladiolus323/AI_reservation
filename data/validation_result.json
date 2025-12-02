@@ -1,0 +1,128 @@
+{
+  "summary": {
+    "patient_schedule_count": 7927,
+    "resource_schedule_count": 7927,
+    "constraints_count": 250
+  },
+  "details": {
+    "patient_schedule": [
+      {
+        "subcategory": "필수 필드 검증",
+        "status": "PASS",
+        "message": "필수 필드 누락: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "날짜시간 형식 검증",
+        "status": "PASS",
+        "message": "잘못된 형식: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "운영시간 검증 (08:00~18:00)",
+        "status": "WARN",
+        "message": "운영시간 외 예약: 4건",
+        "examples": [
+          "행 3354: 2025-09-25 18:25",
+          "행 3750: 2025-10-24 23:00",
+          "행 7555: 2026-03-19 18:30",
+          "행 7822: 2026-05-19 18:20"
+        ]
+      },
+      {
+        "subcategory": "처방ID 중복 검증",
+        "status": "PASS",
+        "message": "중복 처방ID: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "연속검사 순차성 검증",
+        "status": "PASS",
+        "message": "순차성 오류: 0건",
+        "examples": []
+      }
+    ],
+    "constraints": [
+      {
+        "subcategory": "필수 필드 검증",
+        "status": "PASS",
+        "message": "필수 필드 누락: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "소요시간 검증",
+        "status": "PASS",
+        "message": "잘못된 소요시간: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "규칙 JSON 형식 검증",
+        "status": "PASS",
+        "message": "잘못된 규칙 형식: 0건",
+        "examples": []
+      }
+    ],
+    "resource_schedule": [
+      {
+        "subcategory": "필수 필드 검증",
+        "status": "PASS",
+        "message": "필수 필드 누락: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "시간 형식 검증",
+        "status": "PASS",
+        "message": "잘못된 시간 형식: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "시간 범위 검증",
+        "status": "PASS",
+        "message": "시간 범위 오류 (종료<=시작): 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "슬롯 충돌 검증",
+        "status": "PASS",
+        "message": "슬롯 충돌: 0건",
+        "examples": []
+      }
+    ],
+    "파일간_정합성": [
+      {
+        "subcategory": "patient→constraints 처방코드 매핑",
+        "status": "PASS",
+        "message": "constraints에 없는 처방코드: 0종류 (0건)",
+        "examples": []
+      },
+      {
+        "subcategory": "constraints→resource_schedule 장비유형 매핑",
+        "status": "PASS",
+        "message": "resource_schedule에 없는 장비유형: 0개",
+        "examples": []
+      },
+      {
+        "subcategory": "patient↔resource 처방ID 1:1 매핑",
+        "status": "PASS",
+        "message": "resource에 없음: 0건, patient에 없음: 0건",
+        "examples": []
+      },
+      {
+        "subcategory": "실제시작시간 일치 검증",
+        "status": "PASS",
+        "message": "실제시작시간 불일치: 0건",
+        "examples": []
+      }
+    ],
+    "검사규칙_위반": [
+      {
+        "subcategory": "검사간 규칙 위반",
+        "status": "PASS",
+        "message": "규칙 위반: 0건 (1991명 환자, 255쌍 검사)",
+        "examples": []
+      }
+    ]
+  },
+  "ruleViolations": [],
+  "violationByTag": {}
+}

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검사실 예약 시간표</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .controls label { font-size: 14px; }
+        .controls select, .controls input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .stats {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .schedule-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .schedule-wrapper {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        .schedule-table {
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+        .schedule-table th,
+        .schedule-table td {
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .schedule-table th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 6px 2px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            min-width: 45px;
+        }
+        .schedule-table th:first-child {
+            background: #2c3e50;
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            min-width: 120px;
+        }
+        .resource-cell {
+            background: #ecf0f1;
+            font-size: 11px;
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 4px 8px;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            text-align: left;
+        }
+        .time-cell {
+            width: 45px;
+            height: 35px;
+            padding: 0;
+            position: relative;
+        }
+        .booking-block {
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            border-radius: 3px;
+            font-size: 9px;
+            color: white;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .booking-block.hovered {
+            transform: scaleY(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        .tooltip {
+            display: none;
+            position: fixed;
+            background: #2c3e50;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 1000;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .tooltip.show { display: block; }
+        .tooltip-row { margin: 4px 0; }
+        .tooltip-label { color: #bdc3c7; font-size: 11px; }
+        .tooltip-value { font-weight: bold; }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+        .equipment-colors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .color-legend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .color-box {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>검사실 예약 시간표</h1>
+        <div class="controls">
+            <label>날짜:
+                <input type="date" id="dateSelect">
+            </label>
+            <label>장비유형:
+                <select id="equipmentSelect">
+                    <option value="">전체</option>
+                </select>
+            </label>
+            <div class="stats" id="stats">데이터 로딩 중...</div>
+        </div>
+        <div class="equipment-colors" id="legend"></div>
+    </div>
+
+    <div class="schedule-container">
+        <div class="schedule-wrapper">
+            <table class="schedule-table" id="scheduleTable">
+                <thead id="scheduleHeader"></thead>
+                <tbody id="scheduleBody">
+                    <tr><td colspan="100" class="loading">CSV 파일을 로딩 중입니다...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // 장비유형별 색상
+        const equipmentColors = {
+            'CT': '#e74c3c',
+            'MRI': '#9b59b6',
+            'PET-CT': '#8e44ad',
+            'SPECT/Gamma Camera': '#2980b9',
+            '초음파(US)': '#3498db',
+            '투시촬영': '#1abc9c',
+            '내시경실': '#16a085',
+            '심초음파실': '#27ae60',
+            '홀터/ABPM': '#2ecc71',
+            '운동부하검사실': '#f1c40f',
+            '동맥경화도검사실': '#f39c12',
+            '청력검사실': '#e67e22',
+            '폐기능검사실': '#d35400',
+            '전정기능검사실': '#c0392b',
+            'EMG/NCV검사실': '#8e44ad',
+            '뇌파검사실(EEG)': '#2c3e50',
+            '신경심리검사실': '#34495e',
+            '자율신경검사실': '#7f8c8d',
+            '신경과기타': '#95a5a6'
+        };
+
+        let resourceData = [];
+        let patientData = [];
+        let allDates = [];
+        let allEquipments = [];
+        let resourcesByEquipment = {};
+
+        // CSV 파싱
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            let header = lines[0];
+            if (header.charCodeAt(0) === 0xFEFF) header = header.slice(1);
+            const headers = header.split(',').map(h => h.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const row = [];
+                let current = '';
+                let inQuotes = false;
+
+                for (const char of lines[i]) {
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                row.push(current.trim());
+
+                const obj = {};
+                headers.forEach((h, idx) => obj[h] = row[idx] || '');
+                data.push(obj);
+            }
+            return data;
+        }
+
+        // 시간을 분으로 변환
+        function timeToMinutes(datetime) {
+            const timePart = datetime.split(' ')[1];
+            const [h, m] = timePart.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        // 데이터 로드
+        async function loadData() {
+            try {
+                const [resourceRes, patientRes] = await Promise.all([
+                    fetch('data/resource_schedule.csv'),
+                    fetch('data/patient_schedule.csv')
+                ]);
+
+                resourceData = parseCSV(await resourceRes.text());
+                patientData = parseCSV(await patientRes.text());
+
+                // 환자 정보 매핑
+                const patientMap = {};
+                patientData.forEach(p => {
+                    patientMap[p['처방ID']] = p;
+                });
+
+                // resource에 환자 정보 추가
+                resourceData.forEach(r => {
+                    const patient = patientMap[r['처방ID']];
+                    if (patient) {
+                        r['환자번호'] = patient['환자번호'];
+                        r['처방명'] = patient['처방명'];
+                        r['처방코드'] = patient['처방코드'];
+                    }
+                });
+
+                // 날짜 목록 추출
+                const dateSet = new Set();
+                resourceData.forEach(r => {
+                    const date = r['실제시작시간']?.split(' ')[0];
+                    if (date) dateSet.add(date);
+                });
+                allDates = [...dateSet].sort();
+
+                // 장비유형별 리소스 그룹화
+                resourceData.forEach(r => {
+                    const equip = r['장비유형'];
+                    const resName = r['리소스명'];
+                    if (!resourcesByEquipment[equip]) {
+                        resourcesByEquipment[equip] = new Set();
+                    }
+                    resourcesByEquipment[equip].add(resName);
+                });
+
+                allEquipments = Object.keys(resourcesByEquipment).sort();
+
+                // UI 초기화
+                initControls();
+                renderSchedule();
+
+            } catch (error) {
+                document.getElementById('scheduleBody').innerHTML =
+                    `<tr><td colspan="100" class="loading" style="color:red;">데이터 로드 실패: ${error.message}<br>웹서버에서 실행해주세요.</td></tr>`;
+            }
+        }
+
+        // 컨트롤 초기화
+        function initControls() {
+            const dateSelect = document.getElementById('dateSelect');
+            const equipSelect = document.getElementById('equipmentSelect');
+
+            // 날짜 설정
+            if (allDates.length > 0) {
+                dateSelect.value = allDates[0];
+                dateSelect.min = allDates[0];
+                dateSelect.max = allDates[allDates.length - 1];
+            }
+
+            // 장비유형 옵션
+            allEquipments.forEach(eq => {
+                const opt = document.createElement('option');
+                opt.value = eq;
+                opt.textContent = eq;
+                equipSelect.appendChild(opt);
+            });
+
+            dateSelect.addEventListener('change', renderSchedule);
+            equipSelect.addEventListener('change', renderSchedule);
+
+            // 범례 생성
+            const legend = document.getElementById('legend');
+            allEquipments.forEach(eq => {
+                const div = document.createElement('div');
+                div.className = 'color-legend';
+                div.innerHTML = `<div class="color-box" style="background:${equipmentColors[eq] || '#666'}"></div>${eq}`;
+                legend.appendChild(div);
+            });
+        }
+
+        // 시간표 렌더링
+        function renderSchedule() {
+            const selectedDate = document.getElementById('dateSelect').value;
+            const selectedEquip = document.getElementById('equipmentSelect').value;
+
+            // 필터링
+            let filtered = resourceData.filter(r => {
+                const date = r['실제시작시간']?.split(' ')[0];
+                return date === selectedDate;
+            });
+
+            if (selectedEquip) {
+                filtered = filtered.filter(r => r['장비유형'] === selectedEquip);
+            }
+
+            // 리소스 목록 (선택한 장비유형의 모든 검사실)
+            let resources = [];
+            if (selectedEquip) {
+                resources = [...(resourcesByEquipment[selectedEquip] || [])].sort();
+            } else {
+                Object.values(resourcesByEquipment).forEach(set => {
+                    set.forEach(r => resources.push(r));
+                });
+                resources = [...new Set(resources)].sort();
+            }
+
+            if (resources.length === 0) {
+                document.getElementById('scheduleBody').innerHTML =
+                    '<tr><td colspan="100" class="loading">검사실이 없습니다.</td></tr>';
+                document.getElementById('scheduleHeader').innerHTML = '';
+                document.getElementById('stats').textContent = '예약 없음';
+                return;
+            }
+
+            // 통계
+            document.getElementById('stats').textContent =
+                `${selectedDate} | ${resources.length}개 검사실 | ${filtered.length}건 예약`;
+
+            // 시간 슬롯 (08:00 ~ 18:00, 10분 단위)
+            const slots = [];
+            for (let h = 8; h < 19; h++) {
+                for (let m = 0; m < 60; m += 10) {
+                    slots.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+                }
+            }
+
+            // 헤더 생성 (시간 가로축)
+            const headerHtml = `
+                <tr>
+                    <th>검사실</th>
+                    ${slots.map(s => `<th>${s}</th>`).join('')}
+                </tr>
+            `;
+            document.getElementById('scheduleHeader').innerHTML = headerHtml;
+
+            // 각 리소스별 예약 정리
+            const bookingsByResource = {};
+            resources.forEach(r => bookingsByResource[r] = []);
+            filtered.forEach(r => {
+                if (bookingsByResource[r['리소스명']]) {
+                    bookingsByResource[r['리소스명']].push(r);
+                }
+            });
+
+            // 바디 생성 (검사실 세로축)
+            let bodyHtml = '';
+            resources.forEach(res => {
+                const bookings = bookingsByResource[res] || [];
+                const resEquip = filtered.find(f => f['리소스명'] === res)?.['장비유형'] ||
+                                 Object.keys(resourcesByEquipment).find(eq => resourcesByEquipment[eq].has(res));
+                const color = equipmentColors[resEquip] || '#666';
+
+                // 각 슬롯에 대해 셀 생성
+                const cellsHtml = slots.map((slot, slotIdx) => {
+                    const slotMinutes = parseInt(slot.split(':')[0]) * 60 + parseInt(slot.split(':')[1]);
+
+                    // 이 슬롯 범위(slotMinutes ~ slotMinutes+10) 내에서 시작하는 예약 찾기
+                    const startingBooking = bookings.find(b => {
+                        const startMin = timeToMinutes(b['실제시작시간']);
+                        return startMin >= slotMinutes && startMin < slotMinutes + 10;
+                    });
+
+                    // 이 슬롯에 걸쳐있는 예약 찾기 (시작 슬롯이 아니어도)
+                    const overlappingBooking = bookings.find(b => {
+                        const startMin = timeToMinutes(b['실제시작시간']);
+                        const endMin = timeToMinutes(b['종료시간']);
+                        return startMin < slotMinutes + 10 && endMin > slotMinutes;
+                    });
+
+                    // 예약 정보 JSON 생성 함수
+                    const makeInfoJson = (booking) => JSON.stringify({
+                        처방ID: booking['처방ID'],
+                        환자번호: booking['환자번호'],
+                        처방명: booking['처방명'],
+                        처방코드: booking['처방코드'],
+                        리소스: booking['리소스명'],
+                        장비유형: booking['장비유형'],
+                        시작: booking['실제시작시간']?.split(' ')[1],
+                        종료: booking['종료시간']?.split(' ')[1]
+                    }).replace(/'/g, "&#39;");
+
+                    if (startingBooking) {
+                        const startMin = timeToMinutes(startingBooking['실제시작시간']);
+                        const endMin = timeToMinutes(startingBooking['종료시간']);
+                        const duration = endMin - startMin;
+
+                        // 슬롯 내 시작 오프셋 (0분=0%, 5분=50%)
+                        const offsetInSlot = startMin - slotMinutes;
+                        const leftPercent = (offsetInSlot / 10) * 100;
+
+                        // 너비 계산 (5분=50%, 10분=100%, 15분=150%)
+                        const widthPercent = (duration / 10) * 100;
+
+                        return `
+                            <td class="time-cell">
+                                <div class="booking-block"
+                                     style="left:${leftPercent}%; width:${widthPercent}%; background:${color};"
+                                     data-info='${makeInfoJson(startingBooking)}'>
+                                    ${startingBooking['환자번호'] || ''}
+                                </div>
+                            </td>
+                        `;
+                    } else if (overlappingBooking) {
+                        // 시작 슬롯은 아니지만 예약이 걸쳐있는 슬롯 (booking-block이 덮고 있으므로 빈 셀)
+                        return `<td class="time-cell"></td>`;
+                    } else {
+                        return `<td class="time-cell"></td>`;
+                    }
+                }).join('');
+
+                bodyHtml += `
+                    <tr>
+                        <td class="resource-cell" style="border-left: 4px solid ${color};">${res}</td>
+                        ${cellsHtml}
+                    </tr>
+                `;
+            });
+
+            document.getElementById('scheduleBody').innerHTML = bodyHtml;
+
+            // 툴팁 이벤트
+            setupTooltips();
+        }
+
+        // 툴팁 설정
+        function setupTooltips() {
+            const tooltip = document.getElementById('tooltip');
+            const table = document.getElementById('scheduleTable');
+            let currentBlock = null;
+
+            // 테이블 전체에서 mousemove로 실제 블록 위치 확인
+            table.addEventListener('mousemove', (e) => {
+                // 마우스 위치에서 모든 요소 확인
+                const elementsAtPoint = document.elementsFromPoint(e.clientX, e.clientY);
+                const block = elementsAtPoint.find(el => el.classList.contains('booking-block'));
+
+                if (block) {
+                    if (currentBlock !== block) {
+                        // 이전 블록 hover 해제
+                        if (currentBlock) {
+                            currentBlock.classList.remove('hovered');
+                        }
+                        currentBlock = block;
+                        currentBlock.classList.add('hovered');
+
+                        const info = JSON.parse(block.dataset.info);
+                        tooltip.innerHTML = `
+                            <div class="tooltip-row"><span class="tooltip-label">환자번호:</span> <span class="tooltip-value">${info.환자번호 || '-'}</span></div>
+                            <div class="tooltip-row"><span class="tooltip-label">처방코드:</span> <span class="tooltip-value">${info.처방코드 || '-'}</span></div>
+                            <div class="tooltip-row"><span class="tooltip-label">처방명:</span> <span class="tooltip-value">${info.처방명 || '-'}</span></div>
+                            <div class="tooltip-row"><span class="tooltip-label">검사실:</span> <span class="tooltip-value">${info.리소스}</span></div>
+                            <div class="tooltip-row"><span class="tooltip-label">시간:</span> <span class="tooltip-value">${info.시작} ~ ${info.종료}</span></div>
+                        `;
+                    }
+                    tooltip.style.left = (e.clientX + 15) + 'px';
+                    tooltip.style.top = (e.clientY + 15) + 'px';
+                    tooltip.classList.add('show');
+                } else {
+                    if (currentBlock) {
+                        currentBlock.classList.remove('hovered');
+                        currentBlock = null;
+                        tooltip.classList.remove('show');
+                    }
+                }
+            });
+
+            table.addEventListener('mouseleave', () => {
+                if (currentBlock) {
+                    currentBlock.classList.remove('hovered');
+                    currentBlock = null;
+                }
+                tooltip.classList.remove('show');
+            });
+        }
+
+        // 시작
+        loadData();
+    </script>
+</body>
+</html>

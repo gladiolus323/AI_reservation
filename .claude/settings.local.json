@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(node -e:*)",
+      "Bash(npm install:*)",
+      "Bash(node generate_constraints.js:*)",
+      "Bash(node src/generate_resource_schedule.js:*)",
+      "Bash(node src/generate_patient_schedule.js:*)",
+      "Bash(node src/generate_constraints.js:*)",
+      "Bash(node src/validate_data.js:*)",
+      "Bash(docs/data_validation_report_v3.md)",
+      "Bash(node:*)",
+      "Bash(del \"c:\\Users\\user\\Desktop\\v2\\,gitignore\")",
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\data\\constraints.csv\")",
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\data\\resource_schedule.csv\")",
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\analyze_resources.js\")",
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\generate_resource_schedule.js\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
