@@ -16,7 +16,20 @@
       "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\data\\resource_schedule.csv\")",
       "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\analyze_resources.js\")",
       "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\src\\generate_resource_schedule.js\")",
-      "Bash(npx serve -p 8080)"
+      "Bash(npx serve -p 8080)",
+      "Bash(npx serve:*)",
+      "Bash(curl:*)",
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\mcp-server\\src\\tools\\check-conflicts.js\")",
+      "Bash(del \"c:\\Users\\user\\Desktop\\AI_reservation\\mcp-server\\src\\tools\\get-available-slots.js\")",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c \"taskkill /PID 6936 /F\")",
+      "Bash(powershell -Command \"Stop-Process -Id 6936 -Force\")",
+      "Bash(powershell:*)",
+      "Bash(mkdir:*)",
+      "Bash(AGENT_ENDPOINT=http://localhost:3000/ node:*)",
+      "Bash(AGENT_ENDPOINT=http://localhost:3000 node:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,13 @@
+{
+  "name": "hospital-reservation-mcp-server",
+  "version": "1.0.0",
+  "description": "병원 검사 예약 추천을 위한 MCP 서버",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
