@@ -325,6 +325,80 @@
             border-left-color: #27ae60;
             background: #f0fff4;
         }
+
+        /* 추천 선택 버튼 스타일 */
+        .recommendation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .rec-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rec-btn.option1 {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+
+        .rec-btn.option1:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .rec-btn.option2 {
+            background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+            color: white;
+        }
+
+        .rec-btn.option2:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .rec-btn.option3 {
+            background: linear-gradient(135deg, #9b59b6 0%, #a569bd 100%);
+            color: white;
+        }
+
+        .rec-btn.option3:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        .rec-btn.retry {
+            background: white;
+            color: #5f6368;
+            border: 2px solid #dadce0;
+        }
+
+        .rec-btn.retry:hover {
+            background: #f8f9fa;
+            border-color: #9aa0a6;
+            transform: translateY(-2px);
+        }
+
+        .rec-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .rec-btn-icon {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -373,6 +447,8 @@
         const API_URL = '/api/chat';
         let sessionId = 'session_' + Date.now();
         let isLoading = false;
+        let retryCount = 0;  // 재추천 횟수 카운터
+        const MAX_RETRY = 3; // 최대 재추천 횟수
 
         function generateSessionId() {
             return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -395,9 +471,38 @@
             const isConfirmQuestion = role === 'assistant' &&
                 (content.includes('맞으신가요') || content.includes('맞습니까'));
 
-            let confirmButtons = '';
-            if (isConfirmQuestion) {
-                confirmButtons = `
+            // 추천 버튼 표시 여부 체크 (추천 1, 추천 2, 추천 3이 모두 있는 경우)
+            const hasRecommendations = role === 'assistant' &&
+                content.includes('**추천 1**') &&
+                content.includes('**추천 2**') &&
+                content.includes('**추천 3**');
+
+            let actionButtons = '';
+
+            if (hasRecommendations) {
+                // 추천 선택 버튼 (시스템 프롬프트의 버튼 텍스트 제거)
+                formattedContent = formattedContent
+                    .replace(/---<br>아래 버튼 중 하나를 선택해주세요:<br>\[추천1\] \[추천2\] \[추천3\] \[재추천\]/g, '')
+                    .replace(/\[추천1\] \[추천2\] \[추천3\] \[재추천\]/g, '');
+
+                actionButtons = `
+                    <div class="recommendation-buttons">
+                        <button class="rec-btn option1" onclick="selectRecommendation(1)">
+                            <span class="rec-btn-icon">1️⃣</span> 추천 1 선택
+                        </button>
+                        <button class="rec-btn option2" onclick="selectRecommendation(2)">
+                            <span class="rec-btn-icon">2️⃣</span> 추천 2 선택
+                        </button>
+                        <button class="rec-btn option3" onclick="selectRecommendation(3)">
+                            <span class="rec-btn-icon">3️⃣</span> 추천 3 선택
+                        </button>
+                        <button class="rec-btn retry" onclick="selectRecommendation(0)">
+                            <span class="rec-btn-icon">🔄</span> 재추천
+                        </button>
+                    </div>
+                `;
+            } else if (isConfirmQuestion) {
+                actionButtons = `
                     <div class="confirm-actions">
                         <button class="confirm-btn yes" onclick="confirmExam(true)">✓ 네, 맞습니다</button>
                         <button class="confirm-btn no" onclick="confirmExam(false)">✗ 아니요, 다시 입력할게요</button>
@@ -407,7 +512,7 @@
 
             messageDiv.innerHTML = `
                 <div class="message-avatar">${avatar}</div>
-                <div class="message-content">${formattedContent}${confirmButtons}</div>
+                <div class="message-content">${formattedContent}${actionButtons}</div>
             `;
 
             messagesDiv.appendChild(messageDiv);
@@ -513,12 +618,63 @@
             sendMessage();
         }
 
+        function selectRecommendation(optionNumber) {
+            // 추천 버튼 비활성화 (중복 클릭 방지)
+            const recBtns = document.querySelectorAll('.rec-btn');
+            recBtns.forEach(btn => {
+                btn.disabled = true;
+            });
+
+            // 재추천인 경우 카운터 증가
+            if (optionNumber === 0) {
+                retryCount++;
+
+                // 5회 초과 시 전화번호 안내
+                if (retryCount >= MAX_RETRY) {
+                    addMessage('다른 시간대로 재추천해주세요', 'user');
+                    addMessage(
+                        '원하시는 시간대를 찾기 어려우시네요. 😔\n\n' +
+                        '검사 예약 관련하여 직접 상담을 원하시면 아래 번호로 연락해주세요.\n\n' +
+                        '📞 **검사예약 문의**: xxx-xxxx\n' +
+                        '⏰ **운영시간**: 평일 09:00 ~ 17:00\n\n' +
+                        '전문 상담원이 최적의 시간을 찾아드리겠습니다.',
+                        'assistant'
+                    );
+                    retryCount = 0; // 카운터 리셋
+                    return;
+                }
+            } else {
+                // 추천 선택 시 카운터 리셋
+                retryCount = 0;
+            }
+
+            let message = '';
+            switch (optionNumber) {
+                case 1:
+                    message = '추천 1번으로 예약할게요';
+                    break;
+                case 2:
+                    message = '추천 2번으로 예약할게요';
+                    break;
+                case 3:
+                    message = '추천 3번으로 예약할게요';
+                    break;
+                case 0:
+                    message = '다른 시간대로 재추천해주세요';
+                    break;
+            }
+
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
         function resetChat() {
             // 서버 세션 초기화
             fetch(`${API_URL}/${sessionId}`, { method: 'DELETE' });
 
             // 새 세션 시작
             sessionId = generateSessionId();
+            retryCount = 0; // 재추천 카운터 리셋
 
             // UI 초기화
             const messagesDiv = document.getElementById('chatMessages');

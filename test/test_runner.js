@@ -15,7 +15,36 @@ function loadTestData() {
   return JSON.parse(data);
 }
 
-// Agent API 호출
+// 확인 질문 패턴 감지
+function isConfirmationQuestion(responseText) {
+  const confirmPatterns = [
+    /맞으신가요/,
+    /맞습니까/,
+    /확인.*부탁/,
+    /맞는지.*확인/,
+    /선택.*버튼/,
+    /눌러주세요/,
+    /클릭.*해주세요/
+  ];
+  return confirmPatterns.some(pattern => pattern.test(responseText));
+}
+
+// 단일 API 호출
+async function sendMessage(sessionId, message) {
+  const response = await fetch(`${CONFIG.agentEndpoint}${CONFIG.chatPath}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId, message })
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+// Agent API 호출 (Multi-turn 지원)
 async function callAgent(testCase) {
   // 테스트용 세션 ID 생성
   const sessionId = `test_${testCase.test_id}_${Date.now()}`;
@@ -23,33 +52,33 @@ async function callAgent(testCase) {
   // 환자 정보와 선호도를 자연어 메시지로 구성
   const message = `환자번호 ${testCase.patient_id}입니다. ${testCase.prescription_name}(${testCase.prescription_code}) 검사 예약하고 싶어요. ${testCase.preference}`;
 
-  const requestBody = {
-    sessionId: sessionId,
-    message: message
-  };
+  const allResponses = [];
 
   try {
-    const response = await fetch(`${CONFIG.agentEndpoint}${CONFIG.chatPath}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
-    });
+    // 첫 번째 메시지 전송
+    let result = await sendMessage(sessionId, message);
+    allResponses.push(result.response || '');
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    // 확인 질문이면 "네, 맞습니다" 자동 응답 (최대 2회)
+    let retryCount = 0;
+    while (isConfirmationQuestion(result.response || '') && retryCount < 2) {
+      console.log(`  → 확인 질문 감지, 자동 응답 전송...`);
+      result = await sendMessage(sessionId, '네, 맞습니다');
+      allResponses.push(result.response || '');
+      retryCount++;
     }
 
-    const result = await response.json();
-
-    // 응답에서 추천 시간대 추출 (Agent 응답 형식에 맞게 파싱)
-    const recommendedSlots = extractSlotsFromResponse(result.response || '');
+    // 모든 응답에서 추천 시간대 추출
+    const combinedResponse = allResponses.join('\n');
+    const recommendedSlots = extractSlotsFromResponse(combinedResponse);
 
     return {
-      raw_response: result.response,
-      recommended_slots: recommendedSlots
+      raw_response: combinedResponse,
+      recommended_slots: recommendedSlots,
+      turn_count: allResponses.length
     };
   } catch (error) {
-    return { error: error.message, recommended_slots: [] };
+    return { error: error.message, recommended_slots: [], turn_count: 0 };
   }
 }
 
