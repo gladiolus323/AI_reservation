@@ -1,0 +1,67 @@
+﻿코드값 정의서 (CODE_DEFINITION),,,,
+CODE_TYPE,CODE_VALUE,CODE_NAME,DESCRIPTION,비고
+,,,,
+[SAME_DAY_CD] 당일 시행 가능 여부,,,,
+SAME_DAY_CD,Y,가능,당일 동시 시행 가능,
+SAME_DAY_CD,N,불가,당일 동시 시행 불가,GAP_VALUE NULL이면 1일로 해석
+SAME_DAY_CD,C,조건부,순서 엄수 시 가능,
+,,,,
+[GAP_UNIT] 간격 단위,,,,
+GAP_UNIT,D,일,Day 단위,
+GAP_UNIT,H,시간,Hour 단위,
+GAP_UNIT,M,분,Minute 단위,
+,,,,
+[WALK_IN_POLICY] 예약 없이 방문 시 대응,,,,
+WALK_IN_POLICY,A,즉시허용,예약 없이 즉시 검사 가능,Allow
+WALK_IN_POLICY,C,통화후허용,담당자 통화 후 검사 가능,Call
+WALK_IN_POLICY,R,예약필수,반드시 예약 필요,Reservation
+,,,,
+[COND_TYPE] 조건 종류,,,,
+COND_TYPE,AGE,나이,환자 연령 조건,만 나이 기준
+COND_TYPE,MED,약물,복용 약물 조건,Metformin 등
+COND_TYPE,ALLERGY,알레르기,알레르기 여부 조건,조영제 알레르기 등
+COND_TYPE,PREG,임신,임신 여부 조건,
+COND_TYPE,DISEASE,질환,특정 질환 조건,당뇨/투석 등
+COND_TYPE,DEVICE,의료기기,체내 의료기기 조건,심박동기 등
+COND_TYPE,WEEKDAY,요일,특정 요일 조건,토/일 등
+COND_TYPE,INTERVAL,검사간격,이전 검사 후 간격 조건,BMD 11개월 등
+,,,,
+[COND_OP] 비교 연산자,,,,
+COND_OP,=,같음,값이 같을 때,
+COND_OP,<,미만,값보다 작을 때,
+COND_OP,>,초과,값보다 클 때,
+COND_OP,<=,이하,값 이하일 때,
+COND_OP,>=,이상,값 이상일 때,
+COND_OP,!=,같지않음,값이 다를 때,
+COND_OP,STOP,복용중단,약물 복용 중단 필요,
+COND_OP,IN,포함,목록에 포함될 때,
+,,,,
+[ACTION_CD] 필수 조치 코드,,,,
+ACTION_CD,GUARD,보호자필수,보호자 동반 필수,
+ACTION_CD,NOWEEKEND,주말불가,주말 예약 불가,
+ACTION_CD,TIMEONLY,시간제한,특정 시간대만 가능,
+ACTION_CD,FASTING,금식조정,금식 시간 조정 필요,
+ACTION_CD,CONSENT,동의서필수,별도 동의서 필요,
+ACTION_CD,PRETEST,사전검사필수,사전 검사 필요,
+ACTION_CD,STOPMED,약물중단,약물 복용 중단 필요,
+,,,,
+[REASON_CD] 불가/제한 사유 코드,,,,
+REASON_CD,CONTRAST,조영제배출,조영제 체내 배출 대기 필요,
+REASON_CD,FASTING,금식,금식 시간 확보 필요,
+REASON_CD,BOWEL,장정결,장 정결 필요,
+REASON_CD,SEDATION,진정회복,진정(수면) 검사 후 회복 필요,
+REASON_CD,RADIATION,방사선,방사선 노출 제한,
+,,,,
+[YN] 예/아니오 공통 코드,,,,
+YN,Y,예,Yes,
+YN,N,아니오,No,
+,,,,
+[EQUIPMENT_TYPE] 장비 유형 코드,,,,
+EQUIPMENT_TYPE,CT,CT,CT 촬영 장비,RC/HA prefix
+EQUIPMENT_TYPE,MRI,MRI,MRI 촬영 장비,RM prefix
+EQUIPMENT_TYPE,US,초음파,초음파 검사 장비,RU prefix
+EQUIPMENT_TYPE,NM,핵의학,핵의학/PET 장비,NM prefix
+EQUIPMENT_TYPE,ENDO,내시경,내시경 검사 장비,SC03 prefix
+EQUIPMENT_TYPE,FUNC,기능검사,심전도/폐기능/뇌파 등,SC prefix
+EQUIPMENT_TYPE,XRAY,일반촬영,BMD/Mammo/EOS 등,RX prefix
+EQUIPMENT_TYPE,FLUORO,투시촬영,투시 조영 검사,RF prefix

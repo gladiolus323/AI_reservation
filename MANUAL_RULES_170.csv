@@ -1,0 +1,171 @@
+RULE_NO,RULE_CATEGORY,RULE_CONTENT,MANUAL_SOURCE,FORMALIZABLE,SCHEDULING_YN
+1,RELATION,조영CT 후 BMD 3일 간격,p1: CT조영 후 BMD 3일 간격 필요,Y,Y
+2,RELATION,위내시경-대장내시경 같은날 가능,p2: 같은날 가능,Y,Y
+3,RELATION,진정내시경→CT 60분 후 가능,p2: 진정내시경 후 CT 60분 대기,Y,Y
+4,RELATION,비조영MRI→조영MRI 순서 필수,p6: 비조영 먼저 후 조영,Y,Y
+5,RELATION,조영MRI 24시간 간격,p6: 조영MRI 24시간 간격,Y,Y
+6,RELATION,Brain MRI-PET 같은날 가능,p1: 같은날 가능,Y,Y
+7,RELATION,MRI-PET 다른날 시 1일 간격,p6: MRI→PET 1일 간격,Y,Y
+8,RELATION,CT-PET 1일 간격,p8: CT→PET 1일 간격,Y,Y
+9,RELATION,CT조영+메포민 복용 시 PET 3일 간격,p8: 메포민 복용 시 3일 간격,Y,Y
+10,RELATION,Heart CT→Heart MR 금식검사 순서,p7: 금식검사 순서 필수,Y,Y
+11,RELATION,복부CT→Coronary CT 순서,p1: 복부CT 먼저,Y,Y
+12,RELATION,투시→CT 7일 간격,p17: 투시 후 CT 7일,Y,Y
+13,RELATION,CT→투시 2일 간격,p17: CT 후 투시 2일,Y,Y
+14,RELATION,대장내시경→Defecogram 1일 간격,p2: 장정결 관련 1일,Y,Y
+15,RELATION,투시→대장내시경 7일 간격,p2: 투시 후 내시경 7일,Y,Y
+16,RELATION,핵의학-핵의학 2일 간격,p9: 방사선 간격 2일,Y,Y
+17,RELATION,Bone scan-CT(비조영) 같은날 가능,p11: 같은날 가능,Y,Y
+18,RELATION,SPECT→Coronary CT 1일 간격,p12: 핵의학→CT 1일,Y,Y
+19,RELATION,Coronary CT→SPECT 2일 간격,p12: CT→핵의학 2일,Y,Y
+20,RELATION,유방MRI→유방초음파 2일 간격,p7: 같은날 또는 2일,Y,Y
+21,RELATION,위내시경-PET 당일불가,p32: 당일불가,Y,Y
+22,RELATION,대장내시경-복부초음파 당일불가,p32: 당일불가,Y,Y
+23,RELATION,대장내시경-투시 당일불가,p32: 당일불가,Y,Y
+24,RELATION,Heart MR-CPX 당일불가,p32: 당일불가,Y,Y
+25,RELATION,Heart MR-Stress echo 당일불가,p32: 당일불가,Y,Y
+26,RELATION,SPECT-TMT 당일불가,p32: 당일불가,Y,Y
+27,RELATION,Coronary CT-TMT/CPX 당일불가,p28: 당일불가,Y,Y
+28,RELATION,PFT-대장내시경 당일불가,p27: 당일불가,Y,Y
+29,RELATION,UBT→위내시경 60분 후,p12: UBT 후 60분 대기,Y,Y
+30,RELATION,UBT-대장내시경 당일불가,p12: 당일불가,Y,Y
+31,RELATION,복부초음파→위내시경 순서,p13: 초음파 먼저,Y,Y
+32,RELATION,복부초음파-대장내시경 당일불가,p14: 당일불가,Y,Y
+33,RELATION,EOS→Bone scan 순서,p25: EOS 먼저,Y,Y
+34,RELATION,Mammography→핵의학 순서,p34: 유방촬영 먼저,Y,Y
+35,RELATION,VCUG→Renal Scan 2일 간격,p12: VCUG 후 2일,Y,Y
+36,RELATION,위내시경-Sigmoidoscopy 같은날 가능,p2: 같은날 가능,Y,Y
+37,RELATION,CT entero→대장내시경 90분 후,p9: CT 후 90분 대기,Y,Y
+38,RELATION,식도내압→위내시경 30분 후,p27: 내압 후 30분,Y,Y
+39,RELATION,위내시경→식도내압 2시간 후,p27: 내시경 후 2시간,Y,Y
+40,RELATION,항문내압→대장내시경 1일 간격,p27: 항문내압 후 1일,Y,Y
+41,RELATION,Manometry→Defecogram 3일 간격,p17: 내압 후 3일,Y,Y
+42,RELATION,DMSA Scan→VCUG 2일 간격,p10: DMSA 후 2일,Y,Y
+43,RELATION,CT→Esophagography 순서,p18: CT 먼저,Y,Y
+44,RELATION,Esophagography→CT 7일 간격,p18: 식도조영 후 7일,Y,Y
+45,RELATION,US:Kidney-US:GB Bile 당일불가,p14: 당일불가,Y,Y
+46,RELATION,US:Small bowel-US:GB Bile 당일불가,p14: 당일불가,Y,Y
+47,RELATION,US:Small bowel-US:Appendix 당일불가,p14: 당일불가,Y,Y
+48,RELATION,기도가역성-메타콜린 3일 간격,p26: 3일 간격,Y,Y
+49,RELATION,Holter장착 중 Chest검사 불가,p27: 장착 중 불가,Y,Y
+50,RELATION,PSG→MSLT 다음날,p21: PSG 다음날 MSLT,Y,Y
+51,RELATION,조영CT 후 핵의학 2일 간격,p9: 조영제 간섭,Y,Y
+52,RELATION,조영CT 후 갑상선스캔 4주 간격,p10: 요오드 간섭,Y,Y
+53,RELATION,조영CT 후 I-131치료 4주 간격,p10: 요오드 간섭,Y,Y
+54,RELATION,핵의학 후 PET 2~3일 간격,p11: 동위원소 간섭,Y,Y
+55,RELATION,PET-CT 후 핵의학 3일 간격,p11: 동위원소 간섭,Y,Y
+56,RELATION,SPECT 후 PET 3일 간격,p11: 동위원소 간섭,Y,Y
+57,RELATION,조영MRI 후 핵의학 간격,p9: 간섭 가능성,Y,Y
+58,RELATION,대장내시경 후 PET 3일 간격,p11: 장정결 영향,Y,Y
+59,RELATION,복부CT 조영 당일 내시경 불가,p2: 조영제 영향,Y,Y
+60,RELATION,조영CT 당일 초음파 순서,p13: 초음파 먼저,Y,Y
+61,RELATION,조영MRI 당일 초음파 순서,p13: 초음파 먼저,Y,Y
+62,RELATION,BMD-CT 순서 (BMD 선행),p25: BMD 먼저,Y,Y
+63,RELATION,대장내시경-CT 순서 (CT선행),p9: CT 먼저,Y,Y
+64,RELATION,금식검사 당일 진행 순서,p1: 금식검사 먼저,Y,Y
+65,CONDITION,만19세 미만 조영제검사 보호자동반,p1: 만19세 미만 보호자동반 필수,Y,N
+66,CONDITION,소아CT 오후2~3시만 예약,p1: 소아CT 오후2~3시,Y,Y
+67,CONDITION,진정MRI/CT 9:30~15:30만,p1: 진정검사 시간대 제한,Y,Y
+68,CONDITION,소아CT 주말 예약 불가,p1: 소아CT 주말불가,Y,Y
+69,CONDITION,진정MRI/CT 주말 예약 불가,p1: 진정검사 주말불가,Y,Y
+70,CONDITION,CT조영 전후 메포민 2일 중단,p8: 메포민 2일 중단,Y,N
+71,CONDITION,CT조영(IMC) 메포민 3일 중단,p8: IMC 3일 중단,Y,N
+72,CONDITION,MRI는 메포민 복용 무관,p6: MRI 메포민 무관,Y,N
+73,CONDITION,내시경 전 아스피린 5~7일 중단,p2: 아스피린 5~7일 중단,Y,N
+74,CONDITION,CT/MRI 조영제 알레르기 동의서,p1: 조영제 알러지 동의서 필수,Y,N
+75,CONDITION,임신 시 MRI 비조영만,p6: 임신 시 조영제 미사용,Y,N
+76,CONDITION,심박동기 MRI 평일근무시간만,p6: 심박동기 시간제한,Y,Y
+77,CONDITION,CT금식 중 혈압약 복용 가능,p1: 금식 중 혈압약 OK,Y,N
+78,CONDITION,내시경금식 중 소량물 복용 가능,p2: 금식 중 소량물 OK,Y,N
+79,CONDITION,당뇨환자 PET 오전예약 필수,p10: 당뇨환자 오전예약,Y,Y
+80,CONDITION,PET 검사 당일 인슐린 금지,p10: 당일 인슐린 금지,Y,N
+81,CONDITION,신생아CT 4시간 금식,p8: 신생아 4시간 금식,Y,N
+82,CONDITION,소아CT 6시간 금식,p8: 소아 6시간 금식,Y,N
+83,CONDITION,성인CT 8시간 금식,p8: 성인 8시간 금식,Y,N
+84,CONDITION,MRI조영 토요일 오전만,p6: 토요일 오전만 조영,Y,Y
+85,CONDITION,MRI 주말오후 비조영만,p6: 주말오후 비조영만,Y,Y
+86,CONDITION,투석환자 CT 후 투석 필요,p8: 투석환자 CT후 투석,Y,N
+87,CONDITION,소아초음파 4개월 이전만,p14: 4개월 이전만 가능,Y,Y
+88,CONDITION,요역동학 심장약 소량물 복용,p29: 심장약 소량물 복용,Y,N
+89,CONDITION,진정내시경 RTC 1시간전 도착,p2: 1시간 전 도착,Y,N
+90,CONDITION,비진정내시경 RTC 30분전 도착,p2: 30분 전 도착,Y,N
+91,CONDITION,위부분절제(LADG/GIST) 3번설명문,p2: 수술이력별 설명문,Y,N
+92,CONDITION,위완전절제(LATG) 2번설명문,p2: 수술이력별 설명문,Y,N
+93,CONDITION,항응고제 복용 중단 (내시경),p2: 항응고제 중단 필요,Y,N
+94,CONDITION,와파린 복용 중단 (내시경),p2: 와파린 중단 필요,Y,N
+95,CONDITION,조영제 신장기능 확인 (eGFR),p1: 신장기능 확인,Y,N
+96,CONDITION,MRI 금속 이물질 확인,p6: 금속 이물질 확인,Y,N
+97,CONDITION,PET 격렬운동 24시간 전 금지,p10: 격렬운동 금지,Y,N
+98,CONDITION,PET 고탄수화물 식이 제한,p10: 식이 제한,Y,N
+99,CONDITION,핵의학 수유부 24시간 수유중단,p9: 수유중단,Y,N
+100,CONDITION,조영MRI 수유부 24시간 수유중단,p6: 수유중단,Y,N
+101,CONDITION,소아 진정검사 NPO 확인,p1: 소아 진정 NPO,Y,N
+102,CONDITION,소아 진정검사 회복실 대기,p1: 회복실 대기,Y,N
+103,CONDITION,노인 MRI 보청기 제거,p6: 보청기 제거,Y,N
+104,CONDITION,심박동기 환자 MRI 사전상담,p6: 사전상담 필수,Y,N
+105,CONDITION,대장내시경 장정결제 복용,p2: 장정결제 복용,Y,N
+106,CONDITION,대장내시경 저잔사식 3일,p2: 저잔사식 3일,Y,N
+107,CONDITION,PET 금식 6시간,p10: PET 6시간 금식,Y,N
+108,CONDITION,PET 혈당 200 이하 확인,p10: 혈당 200 이하,Y,N
+109,CONDITION,내시경 보호자 동반 (진정),p2: 진정 시 보호자,Y,N
+110,CONDITION,핵의학 검사 전 요오드 제한,p9: 요오드 제한,Y,N
+111,CONDITION,갑상선스캔 요오드 2주 제한,p10: 요오드 2주 제한,Y,N
+112,CONDITION,CT Chest 호흡연습 필요,p8: 호흡연습,Y,N
+113,CONDITION,MRI 폐소공포증 확인,p6: 폐소공포증 확인,Y,N
+114,CONDITION,조영제 사전투약 (알레르기),p1: 사전투약 필요,Y,N
+115,CONDITION,경구 조영제 복용 안내,p8: 경구조영제 복용,Y,N
+116,CONDITION,관장검사 30분 전 관장,p3: 30분 전 관장,Y,N
+117,CONDITION,요역동학 방광 채움 필요,p29: 방광 채움,Y,N
+118,CONDITION,BMD 11개월 이내 비급여,p25: 11개월 이내 비급여,Y,N
+119,ATTRIBUTE,PET 검사 소요시간 2시간,p10: PET 소요시간 2시간,Y,Y
+120,ATTRIBUTE,MRI 검사 소요시간 40~50분,p6: MRI 40~50분,Y,Y
+121,ATTRIBUTE,Heart MR 검사 소요시간 2시간,p6: Heart MR 2시간,Y,Y
+122,ATTRIBUTE,Coronary CT 소요시간 90분,p8: 맥박조절로 90분,Y,Y
+123,ATTRIBUTE,진정검사 60분 전 내원,p1: 60분 전 내원,Y,Y
+124,ATTRIBUTE,관장 30분 전 내원,p3: 30분 전 내원,Y,Y
+125,ATTRIBUTE,CT/MAMMO/BMD 당일예약 가능,p1: 당일예약 가능,Y,Y
+126,ATTRIBUTE,PET 예약 필수,p10: 예약 필수,Y,Y
+127,ATTRIBUTE,초음파/심초음파 당일결과,p15: 당일결과,Y,N
+128,ATTRIBUTE,핵의학 3일 후 결과,p9: 3일 후 결과,Y,N
+129,ATTRIBUTE,MRI 8시간 금식,p6: 8시간 금식,Y,N
+130,ATTRIBUTE,MRI Liver(primovist) 6시간 금식,p7: 6시간 금식,Y,N
+131,ATTRIBUTE,위내시경 8시간 금식,p2: 8시간 금식,Y,N
+132,ATTRIBUTE,피검사 12시간 금식,p1: 12시간 금식,Y,N
+133,ATTRIBUTE,IMC 피검사 8시간 금식,p1: 8시간 금식,Y,N
+134,ATTRIBUTE,CT 조영제 사용 구분,p1: 조영제 사용 여부,Y,Y
+135,ATTRIBUTE,MRI 조영제 사용 구분,p6: 조영제 사용 여부,Y,Y
+136,ATTRIBUTE,진정 MRI/CT 구분,p1: 진정검사 구분,Y,Y
+137,ATTRIBUTE,PSG 21:00~06:00 운영,p21: 야간 운영,Y,Y
+138,ATTRIBUTE,MSLT 08:30~17:00 운영,p21: 주간 운영,Y,Y
+139,ATTRIBUTE,소아 CT 예약 시간 제한,p1: 소아 시간제한,Y,Y
+140,LOGIC,위내시경 오후 시 8시간 금식 역산,p2: 검사시간 기준 역산 필요,N,Y
+141,LOGIC,Coronary CT 후 90분 뒤 다음검사,p8: 맥박조절 대기시간 계산,N,Y
+142,LOGIC,Holter 기계 제거일 계산 (주말제외),p27: 부착일+일수 주말 고려,N,Y
+143,LOGIC,72시간 Holter 결과 15일 후,p27: 기계 부착일 기준,N,N
+144,LOGIC,진료시간 기준 검사예약 역산,p15: RTC 시간 기반 역산,N,Y
+145,LOGIC,RTC 일주일 전 예약 (공휴일제외),p7: 공휴일 마스터 조회,N,Y
+146,LOGIC,MSLT 수면다원 다음날 8:30 (공휴일제외),p21: 영업일 계산,N,Y
+147,LOGIC,핵의학 3시반~4시반 이후 예약 불가,p9: 약물 준비 시간 체크,N,Y
+148,LOGIC,복합 처방 시 최대 금식시간 적용,p1: 여러 검사 MAX 연산,N,Y
+149,LOGIC,같은 날 CT 여러개 시 contrast 1개과금,p7: 처방 순회 과금 로직,N,N
+150,LOGIC,CT entero+대장내시경 약 설명 분기,p9: 검사조합별 분기,N,N
+151,LOGIC,CT 장정결제(쿨프렙) 처방 확인,p8: Remark 키워드 파싱,N,N
+152,LOGIC,내시경 직접 메모 시 교수방 배정,p3: Remark+스케줄 매칭,N,Y
+153,LOGIC,슬롯 부족 시 검사실 통화 알림,p2: 실시간 슬롯 조회,N,Y
+154,UNNECESSARY,7번방 금토 내시경 X (5/20공지),p5: 임시 공지,N,N
+155,UNNECESSARY,IMG 이주엽샘 12/23~2/14 휴직,p5: 일시적 스케줄,N,N
+156,UNNECESSARY,유방초음파 12/20일 이후 예약금지,p13: 임시 공지,N,N
+157,UNNECESSARY,이진욱 교수 25년3월~26년2월 해외연수,p3: 일시적 스케줄,N,N
+158,UNNECESSARY,10/24 11/14만 이유진 직접 안됨,p5: 특정일 예외,N,N
+159,UNNECESSARY,7/10 이유진 출장 X,p5: 특정일 예외,N,N
+160,UNNECESSARY,소아초음파 9/13~10/13 예약 안됨,p13: 임시 제한,N,N
+161,UNNECESSARY,신경심리3번방 4/14~11월말 오픈,p21: 임시 슬롯,N,N
+162,UNNECESSARY,위내시경 토요일 오전 (8월말까지안함),p2: 기간 한정,N,N
+163,UNNECESSARY,대장내시경 토요일 X (8월말까지안함),p2: 기간 한정,N,N
+164,UNNECESSARY,검사실 급한환자 통화 후 예약,p5: 운영 지침,N,N
+165,UNNECESSARY,병동오더로는 예약 불가,p1: 업무 프로세스,N,N
+166,UNNECESSARY,환자 특이사항 메모 기재,p36: 업무 지침,N,N
+167,UNNECESSARY,전화돌리기 방법,p37: 운영 매뉴얼,N,N
+168,UNNECESSARY,결과지 수령 방법 안내,p-: 안내 사항,N,N
+169,UNNECESSARY,황재석 교수 출장 많아 넉넉히,p1: 개인별 운영,N,N
+170,UNNECESSARY,특정 교수 직접메모 시 해당방 배정,p3: 개인 선호도,N,N

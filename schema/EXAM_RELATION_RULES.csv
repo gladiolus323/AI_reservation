@@ -1,0 +1,10 @@
+﻿컬럼명,데이터타입,필수여부,설명,데이터 예시
+EXAM_A,VARCHAR(20),Y,선행(기준) 검사 코드,CT001
+EXAM_B,VARCHAR(20),Y,후행(대상) 검사 코드,BMD001
+SEQ_REQ_YN,CHAR(1),N,순서 필수 여부,"Y: 순서 필수, N: 순서 무관"
+SAME_DAY_CD,CHAR(1),Y,당일 시행 가능 여부 코드,"Y: 가능, N: 불가, C: 조건부"
+GAP_VALUE,INT,N,A→B 최소 필수 간격 수치,"1, 2, 3, 60, 90"
+GAP_UNIT,CHAR(1),N,A→B 간격 단위,"D: Day, H: Hour, M: Minute"
+REV_GAP_VALUE,INT,N,B→A 역방향 간격 수치 (NULL=정방향과 동일),"7, 2"
+REV_GAP_UNIT,CHAR(1),N,B→A 역방향 간격 단위 (NULL=정방향과 동일),"D, H, M"
+REASON_CD,VARCHAR(20),N,불가/제한 사유 코드,"CONTRAST, FASTING, BOWEL, SEDATION, RADIATION, CARDIAC"

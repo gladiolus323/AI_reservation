@@ -1,0 +1,268 @@
+﻿EXAM_CD,EXAM_NM,DURATION_MIN,PREP_MIN,WALK_IN_POLICY,RESULT_DAYS,FASTING_HRS,CONTRAST_YN,SEDATION_YN,MIN_AGE,MAX_AGE,AVAIL_START_TIME,AVAIL_END_TIME,EQUIPMENT_TYPE
+HA443,경부제한적CT,20,,,,,N,N,,,,,CT
+HA444,흉부제한적CT,20,,,,,N,N,,,,,CT
+HA445,복부(골반포함)제한적CT,20,,,,,N,N,,,,,CT
+HA446,척추제한적CT,20,,,,,N,N,,,,,CT
+NM010001,Thyroid uptake scan 99mTc,30,,R,3.0,,N,N,,,,,NM
+NM010011,Kidney Scan DTPA,30,,R,3.0,,N,N,,,,,NM
+NM010013,Wholebody Bone Scan,30,,R,3.0,,N,N,,,,,NM
+NM010014,Threephase Bone Scan,30,,R,3.0,,N,N,,,,,NM
+NM010015,Lymphoscintigraphy,30,,R,3.0,,N,N,,,,,NM
+NM010024,Parathyroid Scan MIBI,30,,R,3.0,,N,N,,,,,NM
+NM020001,뇌 FP-CIT,120,,R,3.0,,N,N,,,,,NM
+NM020002,PET BRAIN (Flutemetamol),120,,R,3.0,,N,N,,,,,NM
+NM020003,PET TORSO,120,,R,3.0,,N,N,,,,,NM
+NM020004,PET TORSO CONTRAST,120,,R,3.0,,Y,N,,,,,NM
+NM020009,[검진] PET CT(전신),120,,R,3.0,,N,N,,,,,NM
+RC010001,Brain CT,20,,A,,,N,N,,,,,CT
+RC010005,Skull 3D CT,20,,A,,,N,N,,,,,CT
+RC010007,Facial bone 3D CT,20,,A,,,N,N,,,,,CT
+RC010008,Facial 3D CT (CE),20,,A,,,Y,N,,,,,CT
+RC010011,Temporal bone CT,10,,A,,,N,N,,,,,CT
+RC010013,PNS CT,20,,A,,,N,N,,,,,CT
+RC010017,Brain angio CT (CE),20,,A,,,Y,N,,,,,CT
+RC010018,(Brain+Neck) angio CT (CE),20,,A,,,Y,N,,,,,CT
+RC010020,Brain perfusion CT (CE),20,,A,,,Y,N,,,,,CT
+RC020001,Neck CT,20,,A,,,N,N,,,,,CT
+RC020002,Neck CT (CE),20,,A,,,Y,N,,,,,CT
+RC020003,Neck CT Vocal cord (CE),20,,A,,,Y,N,,,,,CT
+RC030005,Shoulder 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC030006,Shoulder 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC040001,Chest CT (nonenhance),20,,A,,,N,N,,,,,CT
+RC040002,Chest LDCT (nonenhance),20,,A,,,N,N,,,,,CT
+RC040003,Chest 3D CT (nonenhance),20,,A,,,N,N,,,,,CT
+RC040004,Chest CT (CE),20,,A,,,Y,N,,,,,CT
+RC040005,Chest 3D CT (CE),20,,A,,,Y,N,,,,,CT
+RC040006,Chest Dynamic CT (CE),20,,A,,,Y,N,,,,,CT
+RC040007,Chest CT (CE) + (Useless CM),20,,A,,,Y,N,,,,,CT
+RC040009,Chest Dynamic CT (CE) + (Useless CM),20,,A,,,Y,N,,,,,CT
+RC040010,Pulmonary embolism angio CT (CE),20,,A,,,Y,N,,,,,CT
+RC050002,Cardiac CT (CE),90,,A,,8.0,Y,N,,,,,CT
+RC050003,Cardiac CT (CE) (Triple rule-out),90,,A,,8.0,Y,N,,,,,CT
+RC050004,Cardiac CT (CE) CABG,90,,A,,8.0,Y,N,,,,,CT
+RC060001,Abdomen CT (nonenhance),20,,A,,8.0,N,N,,,,,CT
+RC060002,Abdomen CT (nonenhance)-URO,20,,A,,8.0,N,N,,,,,CT
+RC060003,Abdomen CT (CE),20,,A,,8.0,Y,N,,,,,CT
+RC060004,Abdomen dynamic CT (CE),20,,A,,8.0,Y,N,,,,,CT
+RC060005,Abdomen dynamic CT (CE) & Angio,20,,A,,8.0,Y,N,,,,,CT
+RC070002,Pelvis 3D CT,20,,A,,,N,N,,,,,CT
+RC070003,Pelvis CT (CE),20,,A,,,Y,N,,,,,CT
+RC080001,C-spine CT,20,,A,,,N,N,,,,,CT
+RC080003,L-spine CT,20,,A,,,N,N,,,,,CT
+RC080004,C-spine 3D CT,20,,A,,,N,N,,,,,CT
+RC080006,L-spine 3D CT,20,,A,,,N,N,,,,,CT
+RC080008,C-L spine CT,20,,A,,,N,N,,,,,CT
+RC080010,T-L spine CT,20,,A,,,N,N,,,,,CT
+RC080011,C-T spine 3D CT,20,,A,,,N,N,,,,,CT
+RC080012,C-L spine 3D CT,20,,A,,,N,N,,,,,CT
+RC080014,T-L spine CT 3D,20,,A,,,N,N,,,,,CT
+RC090013,Elbow 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC090014,Elbow 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC090029,Wrist 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC090030,Wrist 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC090033,Hand CT-Left,20,,A,,,N,N,,,,,CT
+RC090037,Hand 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC090041,Upper extremities angio CT (CE),20,,A,,,Y,N,,,,,CT
+RC100006,Femur 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC100013,Knee 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC100014,Knee CT 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC100022,Tibia 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC100029,Ankle 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC100030,Ankle 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC100037,Foot 3D CT-Left,20,,A,,,N,N,,,,,CT
+RC100038,Foot 3D CT-Right,20,,A,,,N,N,,,,,CT
+RC100041,Lower extremities angio CT (CE),20,,A,,,Y,N,,,,,CT
+RC100042,GOUT3D CT,20,,A,,,N,N,,,,,CT
+RC900002,(검진)Chest CT(CE),20,,A,,,Y,N,,,,,CT
+RC900006,(검진)Abdomen CT(CE),20,,A,,8.0,Y,N,,,,,CT
+RC900007,(검진)C-Spine CT,20,,A,,,N,N,,,,,CT
+RC900008,(검진)Cardiac CT(CE),90,,A,,8.0,Y,N,,,,,CT
+RF010002,Swallowing Difficulty Evaluation,15,,,,,N,N,,,,,FLUORO
+RM010001,(3T)MRI-Abdomen,45,,,,,N,N,,,,,MRI
+RM010006,(3T)MRI-Pancreas,45,,,,,N,N,,,,,MRI
+RM010010,(3T)MRI-Cholangiogram(MRCP),45,,,,,N,N,,,,,MRI
+RM010013,(3T)MRI-ABDOMEN (CE),45,,,,8.0,Y,N,,,,,MRI
+RM010014,(3T)MRI-ABDOMEN (CE)+cholangiogram(MRCP),45,,,,8.0,Y,N,,,,,MRI
+RM010018,(3T)MRI-PELVIS (CE),45,,,,8.0,Y,N,,,,,MRI
+RM010021,(3T)MRI-Pancreas (CE),45,,,,8.0,Y,N,,,,,MRI
+RM010022,(3T)MRI-Pancreas (CE) + DWI,45,,,,8.0,Y,N,,,,,MRI
+RM010029,(3T)MRI-Liver (CE) + DWI,45,,,,6.0,Y,N,,,,,MRI
+RM010033,(3T)MRI-Liver (CE)+Pancreas,45,,,,6.0,Y,N,,,,,MRI
+RM010037,(3T)MRI-Prostate (CE) + DWI,45,,,,8.0,Y,N,,,,,MRI
+RM020004,(3T)MRI-Breast (CE) + DWI,45,,,,,Y,N,,,,,MRI
+RM040001,MRI - ELBOW Left,45,,,,,N,N,,,,,MRI
+RM040002,MRI - ELBOW Right,45,,,,,N,N,,,,,MRI
+RM040004,MRI - WRIST Right,45,,,,,N,N,,,,,MRI
+RM040005,MRI - Knee Left,45,,,,,N,N,,,,,MRI
+RM040006,MRI - Knee Right,30,,,,,N,N,,,,,MRI
+RM040020,MRI- KNEE (CE) Left,45,,,,,Y,N,,,,,MRI
+RM040030,MRI-Humerus Left,45,,,,,N,N,,,,,MRI
+RM040044,MRI-Tibia (CE) Left,45,,,,,Y,N,,,,,MRI
+RM050018,(3T)MRI-Temporal bone (CE),15,,,,,Y,N,,,,,MRI
+RM050022,MRI-SPECIAL-DIFFUSION(100%),45,,,,,N,N,,,,,MRI
+RM050023,(3T)MRI-Special-DWI (100%),45,,,,,N,N,,,,,MRI
+RM050031,MRI-BRAIN,45,,,,,N,N,,,,,MRI
+RM050032,(3T)MRI-BRAIN,45,,,,,N,N,,,,,MRI
+RM050034,(3T)MRI-BRAIN + DWI,45,,,,,N,N,,,,,MRI
+RM050038,Head MRA+Neck MRA+DWI,45,,,,,N,N,,,,,MRI
+RM050039,(3T)Head MRA+Neck MRA+DWI,45,,,,,N,N,,,,,MRI
+RM050040,"Brain MRI+Head,Neck MRA+DWI",45,,,,,N,N,,,,,MRI
+RM050041,"(3T)Brain MRI+Head,Neck MRA+DWI",45,,,,,N,N,,,,,MRI
+RM050046,"(3T)Brain MRI+Head,Neck MRA(CE)+DWI",45,,,,,Y,N,,,,,MRI
+RM050047,Brain MRI + Head MRA+ Neck MRA,45,,,,,N,N,,,,,MRI
+RM050048,[3T]Brain MRI + Head MRA + Neck MRA,45,,,,,N,N,,,,,MRI
+RM050049,Brain MRI + Head MRA + DWI,45,,,,,N,N,,,,,MRI
+RM050050,[3T]Brain MRI + Head MRA + DWI,45,,,,,N,N,,,,,MRI
+RM050052,[3T]Brain MRI + Head MRA(CE) + DWI,45,,,,,Y,N,,,,,MRI
+RM050054,[3T]Brain MRI+Head MRA+Neck MRA(CE),45,,,,,Y,N,,,,,MRI
+RM050059,(3T)MRI-BRAIN(CE),45,,,,,Y,N,,,,,MRI
+RM050061,(3T)MRI-BRAIN(CE) + DWI,45,,,,,Y,N,,,,,MRI
+RM070001,MRI-MSK-HIP,45,,,,,N,N,,,,,MRI
+RM070003,MRI-MSK-HIP (CE),45,,,,,Y,N,,,,,MRI
+RM070009,(3T)MRI-Cervix (CE) + DWI,45,,,,,Y,N,,,,,MRI
+RM080009,MRI_ C spine,45,,,,,N,N,,,,,MRI
+RM080011,MRI_ C spine + Whole spine survey,45,,,,,N,N,,,,,MRI
+RM080012,MRI_ C spine + Foraminal view,45,,,,,N,N,,,,,MRI
+RM080013,MRI_ C spine + Foraminal +Whole Survey,45,,,,,N,N,,,,,MRI
+RM080020,MRI_ L spine,30,,,,,N,N,,,,,MRI
+RM080022,MRI_ L spine + Whole spine survey,45,,,,,N,N,,,,,MRI
+RM080023,MRI_ L spine + Foraminal view,45,,,,,N,N,,,,,MRI
+RM080024,MRI_ L spine + Foraminal+Whole survey,45,,,,,N,N,,,,,MRI
+RM080026,MRI_ Whole spine,45,,,,,N,N,,,,,MRI
+RM080029,MRI_ C spine (CE) + Whole spine survey,45,,,,8.0,Y,N,,,,,MRI
+RM080034,MRI_ T spine (CE) + Whole spine survey,45,,,,8.0,Y,N,,,,,MRI
+RM080036,MRI_ L spine (CE),45,,,,8.0,Y,N,,,,,MRI
+RM080038,MRI_ L spine (CE) + Whole spine survey,45,,,,8.0,Y,N,,,,,MRI
+RM080039,MRI_ L spine (CE) + Foraminal view,45,,,,8.0,Y,N,,,,,MRI
+RM080041,MRI_ Whole spine (CE),45,,,,8.0,Y,N,,,,,MRI
+RM090001,MRI- Shoulder Left,45,,,,,N,N,,,,,MRI
+RM090002,MRI- Shoulder Right,45,,,,,N,N,,,,,MRI
+RM090003,MRI-Shoulder(Arthrogram) Left,45,,,,,N,N,,,,,MRI
+RM090006,MRI- Shoulder (CE) Right,45,,,,,Y,N,,,,,MRI
+RM900002,(HC)MRI-L-Spine,30,,,,,N,N,,,,,MRI
+RM900003,(HC)Brain MRI+MRA,30,,,,,N,N,,,,,MRI
+RM900006,(HC)MRI-C-Spine,45,,,,,N,N,,,,,MRI
+RU010001,Abdomen(간.담낭.담도.비장.췌장)-일반,5,,,0.0,,N,N,,,,,US
+RU010003,Abdomen(간.담낭.담도.비장.췌장)-정밀,20,,,0.0,,N,N,,,,,US
+RU010004,Abdominal Appendix,20,,,0.0,,N,N,,,,,US
+RU010005,Abdominal[소장.대장],20,,,0.0,,N,N,,,,,US
+RU010006,Inguinal region,20,,,0.0,,N,N,,,,,US
+RU010008,Kidney(Adrenal Gland)Bladder,20,,,0.0,,N,N,,,,,US
+RU010009,TRUS of Prostate,20,,,0.0,,N,N,,,,,US
+RU010018,비급여:Scrotum,20,,,0.0,,N,N,,,,,US
+RU010022,Liver Biopsy,20,,,0.0,,N,N,,,,,US
+RU020001,Thyroid(Parathyroid gland),20,,,0.0,,N,N,,,,,US
+RU020002,Neck [etc],20,,,0.0,,N,N,,,,,US
+RU020003,비급여:Thyroid·Parathyroid gland,20,,,0.0,,N,N,,,,,US
+RU020004,비급여:Neck [etc],20,,,0.0,,N,N,,,,,US
+RU030009,비급여:Finger[Unilateral],20,,,0.0,,N,N,,,,,US
+RU030011,비급여:Elbow[Unilateral],20,,,0.0,,N,N,,,,,US
+RU030013,비급여:Hip[Unilateral],20,,,0.0,,N,N,,,,,US
+RU030014,비급여:Shoulder[Unilateral],20,,,0.0,,N,N,,,,,US
+RU030015,비급여:Wrist[Unilateral],20,,,0.0,,N,N,,,,,US
+RU030016,비급여:Ankle[Unilateral],20,,,0.0,,N,N,,,,,US
+RU040001,Breast·Axilla-일반,5,,,0.0,,N,N,,,,,US
+RU040003,비급여:Breast·Axilla,20,,,0.0,,N,N,,,,,US
+RU040007,Breast-Axilla-정밀,20,,,0.0,,N,N,,,,,US
+RU050001,Carotid Doppler US,20,,,0.0,,N,N,,,,,US
+RU050006,비급여:Carotid Doppler US,20,,,0.0,,N,N,,,,,US
+RU050012,비급여:편측:Lower Vascular Doppler[A],20,,,0.0,,N,N,,,,,US
+RU050013,비급여:양측:Lower Vascular Doppler[V],20,,,0.0,,N,N,,,,,US
+RU060004,Guiding U-S [Ⅱ],20,,,0.0,,N,N,,,,,US
+RU060007,비급여:연부조직 초음파(일반),20,,,0.0,,N,N,,,,,US
+SC010002,[E6543]나-654-나(2)(심전도 Treadmill monitoring),30,,,,,N,N,,,,,FUNC
+SC010003,[E6545]나-725-다(2-가)심전도감시-48시간이내,15,,,,,N,N,,,,,FUNC
+SC010004,[E6556]나-725-다(2-나)48시간초과7일이내(Holter monitoring 심전도),15,,,,,N,N,,,,,FUNC
+SC010005,[E6557]나-725-다(2-다)7일초과14일이내(Holter monitoring 심전도),15,,,,,N,N,,,,,FUNC
+SC010006,[E6547]나-654-1 24시간혈압측정검사,5,,,,,N,N,,,,,FUNC
+SC010007,[EB433]나943가.경흉부 심초음파(전문),10,,,0.0,,N,N,,,,,FUNC
+SC010009,[Z-EB433]비급여:나943가.경흉부 심초음파(전문),20,,,0.0,,N,N,,,,,FUNC
+SC010010,[EB433J]제한적:나943가.경흉부 심초음파(전문),20,,,0.0,,N,N,,,,,FUNC
+SC010016,[ZS120-21][종검]심장초음파,20,,,0.0,,N,N,,,,,FUNC
+SC010022,[ZIMTD]Carotid IMT(도풀러사용),15,,,0.0,,N,N,,,,,FUNC
+SC010080,외래-동맥경화도검사(PWV&ABI),15,,,,,N,N,,,,,FUNC
+SC030004,4대중증(진정) 상부소화기내시경검사,10,60.0,,,8.0,N,Y,,,,,ENDO
+SC030005,upper Gastrointestinal Endoscopy,10,30.0,,,8.0,N,N,,,,,ENDO
+SC030006,수면내시경-포폴주,30,60.0,,,8.0,N,Y,,,,,ENDO
+SC030009,수면결장경검사-포폴주,30,60.0,,,8.0,N,Y,,,,,ENDO
+SC030010,colon-Fiberscopy,30,30.0,,,8.0,N,N,,,,,ENDO
+SC030011,4대중증(진정) 결장경검사,30,60.0,,,8.0,N,Y,,,,,ENDO
+SC030016,sigmoidscopy,30,30.0,,,8.0,N,N,,,,,ENDO
+SC030017,내시경초음파,30,60.0,,,8.0,N,Y,,,,,ENDO
+SC030023,PEG,30,60.0,,,8.0,N,Y,,,,,ENDO
+SC140005,PTA,15,,,,,N,N,,,,,FUNC
+SC140006,IA(Impedance),15,,,,,N,N,,,,,FUNC
+SC140007,Tinnitus test,5,,,,,N,N,,,,,FUNC
+SC140008,Speech Audiometry,10,,,,,N,N,,,,,FUNC
+SC140009,ART,5,,,,,N,N,,,,,FUNC
+SC140010,OAE,5,,,,,N,N,,,,,FUNC
+SC140011,BERA,10,,,,,N,N,,,,,FUNC
+SC140014,나-601나.호흡곡선 6종,20,,,,,N,N,,,,,FUNC
+SC140015,나-601라2.체적기록법,20,,,,,N,N,,,,,FUNC
+SC140016,나-601 폐확산능(일산화탄소),20,,,,,N,N,,,,,FUNC
+SC140017,Bronchodilator Test,10,,,,,N,N,,,,,FUNC
+SC140020,자발 및 주시안진검사(Spontaneous and Gaze),10,,,,,N,N,,,,,FUNC
+SC140021,두위 및 두위변환 안진검사(Position),15,,,,,N,N,,,,,FUNC
+SC140022,두진후 안진검사(Head Shaking),15,,,,,N,N,,,,,FUNC
+SC140026,시운동성 안진 및 후안진검사(Optokinetic),10,,,,,N,N,,,,,FUNC
+SC140027,급속안구운동검사(전기안진),30,,,,,N,N,,,,,FUNC
+SC140028,시표추적검사(Smooth Pursuit),30,,,,,N,N,,,,,FUNC
+SC160005,[NR] 자율신경계기립경사Table검사,10,,,,,N,N,,,,,FUNC
+SC160006,[NR] 자율신경계이상검사(심박동),5,,,,,N,N,,,,,FUNC
+SC160007,[NR] 자율신경계이상검사(발살바법),5,,,,,N,N,,,,,FUNC
+SC160008,[NR] 어지럼증검사(비급여)Caloric Test포함,30,,,,,N,N,,,,,FUNC
+SC160010,[NR] Simple VNG Test1,30,,,,,N,N,,,,,FUNC
+SC160011,[NR] Simple VNG Test2,30,,,,,N,N,,,,,FUNC
+SC160015,(F6335B)냉온교대검사/비디오안진(비급여),30,,,,,N,N,,,,,FUNC
+SC160019,[NR] 나-611가. EMG 상지[편측],30,,,,,N,N,,,,,FUNC
+SC160020,[NR] 나-611나.EMG 하지[편측],30,,,,,N,N,,,,,FUNC
+SC160021,[NR] 나-611다.EMG 구간,30,,,,,N,N,,,,,FUNC
+SC160023,[NR] 나-612가.NCV 상지[편측]-운동신경,20,,,,,N,N,,,,,FUNC
+SC160024,[NR] 나-612가.NCV 상지[편측]-감각신경,5,,,,,N,N,,,,,FUNC
+SC160025,[NR] 나-612나.NCV 하지[편측]-운동신경,5,,,,,N,N,,,,,FUNC
+SC160026,[NR] 나-612나.NCV 하지[편측]-감각신경,20,,,,,N,N,,,,,FUNC
+SC160027,[NR] 나-612라.NCV 두부,20,,,,,N,N,,,,,FUNC
+SC160028,Repetitive nerve Stimulation Test,30,,,,,N,N,,,,,FUNC
+SC160029,Nerve Excitability Test,30,,,,,N,N,,,,,FUNC
+SC160030,Blink Reflex Study,30,,,,,N,N,,,,,FUNC
+SC160033,[NR] 나-614가(주)각성EEG (18채널이상),30,,,,,N,N,,,,,FUNC
+SC160039,[NR] F파 신경전도검사-상지[편측](운동신경),15,,,,,N,N,,,,,FUNC
+SC160040,[NR] F파 신경전도검사-하지[편측](운동신경),15,,,,,N,N,,,,,FUNC
+SC160041,[NR] H 반사(기타 신경전도검사),15,,,,,N,N,,,,,FUNC
+SC160043,[NR] 족부 수분검사,30,,,,,N,N,,,,,FUNC
+SC160050,UPDRS,30,,,,,N,N,,,,,FUNC
+SC160055,운동질환척도(CRTS),30,,,,,N,N,,,,,FUNC
+SC160056,간이정신진단검사(MMSE),15,,,,,N,N,,,,,FUNC
+SC160057,치매 척도 검사 GDS,10,,,,,N,N,,,,,FUNC
+SC160058,치매 척도 검사 CDR,20,,,,,N,N,,,,,FUNC
+SC160059,치매일상생활력척도(ADL),10,,,,,N,N,,,,,FUNC
+SC160060,증상 및 행동 평가척도(노인우울척도),10,,,,,N,N,,,,,FUNC
+SC160061,서울신경심리검사(SNSB)-종합검사,60,,,,,N,N,,,,,FUNC
+SC160062,한국판CERAD평가집(CERAD-K)-종합검사,60,,,,,N,N,,,,,FUNC
+SC160063,LICA노인인지기능검사(종합)-비문해 노인특성반영,60,,,,,N,N,,,,,FUNC
+SC160064,신경인지기능검사(유형Ⅰ:3~5개)-개별검사(A),40,,,,,N,N,,,,,FUNC
+SC160065,신경인지기능검사(유형Ⅰ:6~8개)-개별검사(A),40,,,,,N,N,,,,,FUNC
+SC160066,신경인지기능검사(유형Ⅱ:1~3개)-개별검사(A),40,,,,,N,N,,,,,FUNC
+SC160067,신경인지기능검사(유형Ⅱ:4개이상)-개별검사(A),40,,,,,N,N,,,,,FUNC
+SC160068,신경인지기능검사(유형Ⅲ:레이복합도형검사)-개별검사,40,,,,,N,N,,,,,FUNC
+SC160069,신경인지기능검사(유형Ⅳ:서울언어학습검사)-개별검사,40,,,,,N,N,,,,,FUNC
+SC160070,너-683 라.치매정신증상척도(NPI),15,,,,,N,N,,,,,FUNC
+SC160086,K-MMSE2-Blue,15,,,,,N,N,,,,,FUNC
+SC220006,[검진] 동맥경화도검사(PWV&ABI),15,,,,,N,N,,,,,FUNC
+RX010001,BMD (Bone Mineral Density),15,,A,,,N,N,,,,,XRAY
+RX020001,Mammography,20,,A,,,N,N,,,,,XRAY
+RX030001,EOS (전척추촬영),15,,,,,N,N,,,,,XRAY
+RF020001,Defecogram (배변조영술),30,30.0,,,,N,N,,,,,FLUORO
+RF030001,Esophagography (식도조영술),20,,,,,N,N,,,,,FLUORO
+RF040001,VCUG (배뇨방광요도조영술),30,,,,,N,N,,,,,FLUORO
+SC040001,UBT (요소호기검사),20,,,,,N,N,,,,,FUNC
+SC050001,Esophageal Manometry (식도내압검사),40,,,,,N,N,,,,,FUNC
+SC050002,Anorectal Manometry (항문내압검사),40,,,,,N,N,,,,,FUNC
+SC060001,CPX (심폐운동검사),60,,,,,N,N,,,,,FUNC
+SC070001,PSG (수면다원검사),480,,,,,N,N,,,21:00,06:00,FUNC
+SC070002,MSLT (주간졸림검사),480,,,,,N,N,,,08:30,17:00,FUNC
+RM060001,Breast MRI (유방 MRI),40,,,,,N,N,,,,,MRI
+RM070002,Heart MRI (심장 MRI),120,,,,8,Y,N,,,08:00,17:00,MRI
+RU060001,Breast Sono (유방 초음파),30,,,,,N,N,,,,,US
+SC060002,TMT (운동부하검사),45,,,,,N,N,,,,,FUNC
+SC060003,Stress Echo (부하심초음파),60,,,,,N,N,,,,,FUNC

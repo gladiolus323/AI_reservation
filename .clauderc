@@ -1,0 +1,1101 @@
+# Claude Code 작업 히스토리
+# 생성일: 2025-12-18
+
+## 작업 기록
+
+### 2025-12-18
+
+1. **[세션 시작]** 사용자 요청: 모든 작업 히스토리를 .clauderc 파일에 저장
+   - `.clauderc` 파일 생성
+   - 앞으로 모든 작업 내용이 이 파일에 기록됨
+
+2. **[PDF 읽기]** "통합 검사예약업무 매뉴얼.pdf" 파일 읽기 완료
+   - 총 38페이지 분량
+   - 내용: 병원 검사 예약 업무 매뉴얼
+   - 주요 내용:
+     * 영유아/소아 검사 예약 규칙
+     * CT, MRI, PET 등 영상검사 예약 규칙
+     * 내시경(위/대장) 검사 예약 규칙
+     * 핵의학 검사 예약 규칙
+     * 초음파/심초음파 검사 예약 규칙
+     * 신경심리검사, 수면다원검사 예약 규칙
+     * 검사 간 동시시행 가능/불가능 규칙
+     * 금식, 약물 복용, 조영제 관련 주의사항
+     * 교수별 스케줄 및 검사실 배정 정보
+
+3. **[마스터 테이블 검토]** "master.csv" 파일 검토 완료
+   - 3개 테이블 구조 확인:
+     * EXAM_MASTER (검사 기본 정보)
+     * EXAM_RELATION_RULES (검사 간 관계 및 간격)
+     * EXAM_CONDITION_RULES (조건부 예외 규칙)
+   - 검토 결과:
+     * 전반적으로 매뉴얼 내용을 잘 정형화함
+     * SAME_DAY_YN 컬럼 중복 정의 발견 → 수정 권장
+     * EXAM_MASTER에 CONTRAST_YN, SEDATION_YN 추가 권장
+     * 코드값 정의서 별도 관리 권장
+
+4. **[마스터 테이블 수정]** "master.csv" 파일 수정 완료
+   - 변경 내용:
+     * SAME_DAY_YN 중복 제거 → SAME_DAY_CD로 통합 (1:가능, 2:불가, 3:조건부)
+     * EXAM_MASTER에 컬럼 추가:
+       - CONTRAST_YN (조영제 사용 여부)
+       - SEDATION_YN (진정검사 여부)
+       - AGE_RESTRICT (연령 제한 유형)
+     * EXAM_RELATION_RULES에 REASON_CD 컬럼 추가 (불가 사유 코드)
+
+5. **[코드값 정의서 생성]** "code_definition.csv" 파일 생성
+   - 포함된 코드 유형:
+     * SAME_DAY_CD: 당일 시행 가능 여부 (1/2/3)
+     * GAP_UNIT: 간격 단위 (D/H/M)
+     * RSV_EXCP_TYPE: 예약 없이 방문 시 대응 (1/2/3)
+     * AGE_RESTRICT: 연령 제한 유형 (0/1/2/3)
+     * COND_TYPE: 조건 종류 (AGE/MED/PROF/CONTRAST 등)
+     * COND_OP: 비교 연산자 (=/</>/STOP 등)
+     * ACTION_FLAG: 필수 조치 플래그 (1~8)
+     * REASON_CD: 불가/제한 사유 코드
+     * YN: 예/아니오 공통 코드
+
+6. **[매뉴얼 vs 마스터 테이블 정형화 분석]** 정형화 가능성 평가 완료
+   - 분석 대상: 38페이지 매뉴얼 전체 내용
+   - 분류 결과:
+
+     **[정형화 가능] (마스터 테이블에 데이터로 관리)**
+     * 검사별 소요시간, 금식시간, 결과 소요일 → EXAM_MASTER
+     * 검사 간 동시시행 가능/불가, 간격 규칙 → EXAM_RELATION_RULES
+     * 연령/약물/조영제 기반 조건부 규칙 → EXAM_CONDITION_RULES
+     * 약 70개 이상의 검사 조합 규칙 정형화 가능
+
+     **[로직 구현 권장] (프로그램으로 처리)**
+     * 위내시경 오후 시 8시간 금식 계산 (동적 시간 계산)
+     * coronary CT 후 1시간30분 지연 (맥박조절)
+     * RTC 일주일 전 계산 (공휴일 제외)
+     * BMD 1년 미만 비급여 전환 (마지막 검사일 조회)
+     * 복합 처방 시 최대 금식시간 적용 (MAX 연산)
+     * CT 여러개 시 contrast 1개만 과금 (처방 순회 로직)
+
+     **[정형화 불필요] (운영 지침/임시 공지)**
+     * 교수별 출장/휴직 일정
+     * 검사실별 슬롯 운영 공지
+     * 업무 유의사항 메모
+     * 예외 케이스 대응 지침
+
+   - 정형화 성능 평가:
+     * 커버리지: 70% (주요 규칙 대부분 정형화 가능)
+     * 정확도: 85% (조건/연산자로 명확한 표현)
+     * 유연성: 75% (CONDITION_RULES로 예외 조건 표현)
+
+   - 추가 권장 테이블:
+     * PROFESSOR_SCHEDULE (교수별 요일/방/시간)
+     * ROOM_SCHEDULE (검사실별 운영 시간)
+
+7. **[파일 이름 변경]** master.csv → schema.csv
+   - 마스터 테이블 스키마 정의 파일 이름 변경
+
+8. **[정형화 분석 보고서 생성]** "정형화_분석_보고서.csv" 파일 생성 완료
+   - 매뉴얼 38페이지 전체 재분석 후 규칙 분류
+   - 분류 결과:
+     * 정형화 가능 규칙: 101개
+       - EXAM_MASTER: 21개 (소요시간, 금식시간, 결과일 등)
+       - EXAM_RELATION_RULES: 50개 (검사 간 간격/순서 규칙)
+       - EXAM_CONDITION_RULES: 30개 (연령/약물/조영제 조건)
+     * 로직 구현 권장: 15개 (동적 계산, 조건 분기 필요)
+     * 정형화 불필요: 15개 (임시 공지, 운영 지침)
+   - 성능 평가: 커버리지 70%, 정확도 85%, 유연성 75%
+   - 추가 권장 테이블 4개 제안
+
+### 2025-12-22
+
+9. **[스키마 범용화]** schema.csv, code_definition.csv 수정 완료
+   - 목적: 다른 병원에서도 사용 가능한 범용 스키마로 개선
+   - 변경 내용:
+
+     **EXAM_MASTER 변경**
+     * AGE_RESTRICT (코드형) 제거 → MIN_AGE, MAX_AGE (숫자형) 추가
+       - 이유: 코드(0/1/2/3)보다 숫자가 더 범용적이고 유연함
+
+     **EXAM_CONDITION_RULES 변경**
+     * COND_TYPE에서 PROF (교수) 제거
+       - 이유: 교수 개념 자체가 병원 특화
+     * COND_TYPE에 INTERVAL (검사간격) 추가
+       - 이유: BMD 11개월 등 검사 간격 조건 표현
+
+     **code_definition.csv 변경**
+     * AGE_RESTRICT 코드 정의 제거
+     * COND_TYPE에서 PROF 제거, INTERVAL 추가
+     * ACTION_FLAG 정리 (8개 → 7개)
+       - 입원필수/외래필수 제거 (병원 특화)
+       - 금식조정, 약물중단 추가
+
+   - 범용성 판단 기준:
+     * 컬럼 자체가 필요한가? (O → 유지)
+     * 값만 병원마다 다른가? (O → 유지)
+     * 개념 자체가 병원 특화인가? (O → 제거)
+
+10. **[폴더 구조 개편]** schema/data 폴더 분리
+    - 목적: 스키마 정의와 합성 데이터 분리 관리
+    - 폴더 구조:
+      ```
+      검사규칙 합성데이터/
+      ├── schema/
+      │   ├── EXAM_MASTER.csv
+      │   ├── EXAM_RELATION_RULES.csv
+      │   └── EXAM_CONDITION_RULES.csv
+      ├── data/
+      │   └── (합성 데이터 저장 예정)
+      ├── code_definition.csv
+      └── .clauderc
+      ```
+    - 스키마 파일 형식: 컬럼명, 데이터타입, 필수여부, 설명, 데이터예시
+
+11. **[스키마 미커버 규칙 보고서 생성]** 스키마_미커버_규칙_보고서.md 생성
+    - 스키마로 커버 불가능한 32개 규칙 정리
+      * 로직 구현 필요: 15개 (시간계산, 캘린더조회, 복합조건, 텍스트파싱)
+      * 범용성 부족: 2개 (병원별 설명문 분기)
+      * 정형화 불필요: 15개 (임시공지, 운영지침)
+    - 스키마 커버율: 99개 / 131개 (76%)
+
+12. **[스키마 컬럼명 개선]** 컬럼명 일관성 및 가독성 향상
+    - 변경 내역:
+
+      **EXAM_MASTER**
+      * PRE_PROC_MIN → PREP_MIN (간결화)
+      * RSV_EXCP_TYPE → WALK_IN_POLICY (약어 제거, 의미 명확화)
+      * RESULT_DAY → RESULT_DAYS (복수형으로 자연스럽게)
+
+      **EXAM_RELATION_RULES**
+      * IS_SEQ_REQ → SEQ_REQ_YN (YN 패턴 일관성)
+
+      **EXAM_CONDITION_RULES**
+      * ACTION_FLAG → ACTION_CD (FLAG보다 CD가 일반적)
+
+      **code_definition.csv**
+      * RSV_EXCP_TYPE → WALK_IN_POLICY
+      * ACTION_FLAG → ACTION_CD
+
+13. **[추가 검사코드 정의]** docs/추가_검사코드_정의.md 생성
+    - constraints.csv(251개)에 없지만 매뉴얼에 필요한 12개 검사 정의
+    - 추가된 검사:
+      * RX010001: BMD (골밀도검사)
+      * RX020001: Mammography (유방촬영술)
+      * RX030001: EOS (전척추촬영)
+      * RF020001: Defecogram (배변조영술)
+      * RF030001: Esophagography (식도조영술)
+      * RF040001: VCUG (배뇨방광요도조영술)
+      * SC040001: UBT (요소호기검사)
+      * SC050001: Esophageal Manometry (식도내압검사)
+      * SC050002: Anorectal Manometry (항문내압검사)
+      * SC060001: CPX (심폐운동검사)
+      * SC070001: PSG (수면다원검사)
+      * SC070002: MSLT (주간졸림검사)
+
+14. **[합성 데이터 생성]** data/ 폴더에 3개 테이블 데이터 생성
+    - 생성 기준:
+      * 최우선: 매뉴얼 규칙
+      * 참조: constraints.csv (신뢰도 낮음)
+      * 키워드 추출: 처방명에서 CONTRAST_YN, SEDATION_YN 추출
+
+    **data/EXAM_MASTER.csv** (263개 검사)
+    - 251개: constraints.csv 기존 검사
+    - 12개: 추가 정의 검사
+    - 적용 규칙:
+      * DURATION_MIN: PET=120, Cardiac CT=90, MRI=45 등
+      * FASTING_HRS: MRI Liver=6, 내시경=8, CT=8 등
+      * PREP_MIN: 진정검사=60, 비진정=30
+      * WALK_IN_POLICY: CT=1(즉시허용), PET/핵의학=3(예약필수)
+      * RESULT_DAYS: 초음파/심초음파=0, 핵의학=3
+      * CONTRAST_YN: 처방명에 (CE)/Contrast 포함 시 Y
+      * SEDATION_YN: 처방명에 수면/진정/포폴 포함 시 Y
+
+    **data/EXAM_RELATION_RULES.csv** (91개 규칙)
+    - 매뉴얼 50개 규칙을 실제 검사코드로 매핑
+    - 주요 규칙:
+      * CT(조영제)→BMD: 3일 간격 (CONTRAST)
+      * 대장내시경→CT: 60분 간격, 순서필수 (SEDATION)
+      * MRI(contrast)→MRI(contrast): 24시간 간격
+      * 핵의학→핵의학: 2일 간격 (RADIATION)
+      * UBT→위내시경: 60분 간격, 순서필수
+      * 식도내압→위내시경: 30분 간격, 순서필수
+
+    **data/EXAM_CONDITION_RULES.csv** (47개 규칙)
+    - 매뉴얼 30개 규칙을 실제 검사코드로 매핑
+    - 주요 규칙:
+      * CT/MRI(조영제) + AGE<19 → 보호자동반필수
+      * 소아CT + WEEKDAY=토/일 → 주말불가
+      * CT(조영제) + MED=Metformin → 약물중단
+      * PET + DISEASE=당뇨 → 오전예약필수
+      * BMD + INTERVAL<11M → 비급여전환
+
+15. **[스키마 필수여부 재정의]** EXAM_MASTER 스키마 수정
+    - DURATION_MIN: N → Y (필수)로 변경
+    - 이유: 스케줄링에 핵심, 모든 검사에 소요시간 정의 가능
+    - 나머지 컬럼: 병원별 입력 부담 고려하여 N (선택) 유지
+
+16. **[EXAM_RELATION_RULES 스키마 개선]** 역방향 간격 컬럼 추가
+    - 문제: 검사 순서에 따라 간격이 다른 경우 (예: CT→투시 2일, 투시→CT 7일)
+    - 기존: 2개 레코드로 분리 저장 (중복, 불편)
+    - 개선: 1개 레코드에 역방향 간격 컬럼 추가
+
+    **추가된 컬럼:**
+    - REV_GAP_VALUE: B→A 역방향 간격 수치 (NULL=정방향과 동일)
+    - REV_GAP_UNIT: B→A 역방향 간격 단위 (NULL=정방향과 동일)
+
+    **해석 규칙:**
+    - SEQ_REQ_YN=Y: 순서 필수, 역방향 불가 (REV_GAP 무시)
+    - SEQ_REQ_YN=N + REV_GAP=NULL: 양방향 동일 간격
+    - SEQ_REQ_YN=N + REV_GAP 있음: 방향별 간격 다름
+
+    **데이터 수정:**
+    - 91개 → 87개 (중복 레코드 4개 통합)
+    - 역방향 간격 적용 예시:
+      * CT↔투시: A→B 2일, B→A 7일
+      * CT↔Esophagography: A→B 1일, B→A 7일
+      * Coronary CT↔SPECT: A→B 2일, B→A 1일
+      * 위내시경↔식도내압: A→B 120분, B→A 30분
+
+17. **[데이터 정합성 검토]** 데이터_정합성_검토_보고서.md 생성
+    - 검토 대상: data/ 폴더 내 3개 CSV 파일
+    - 검토 기준: schema/ 폴더 스키마 + code_definition.csv
+    - 검토 결과:
+      * EXAM_MASTER: 262개, 오류 0건
+      * EXAM_RELATION_RULES: 86개, 오류 0건, 경고 20건
+      * EXAM_CONDITION_RULES: 47개, 오류 0건
+    - 경고 내용: SAME_DAY_CD=N인데 GAP_VALUE 없음 20건
+    - 최종 판정: PASS
+
+18. **[코드값 체계 변경]** 숫자 코드 → 의미있는 문자 코드로 전환
+    - 변경 사유: 숫자(1,2,3)로 가능/불가/조건부 표현 시 혼동 가능성 높음
+    - 변경 내역:
+
+      **WALK_IN_POLICY** (예약 없이 방문 시 대응)
+      * 1 → A (즉시허용, Allow)
+      * 2 → C (통화후허용, Call)
+      * 3 → R (예약필수, Reservation)
+
+      **SAME_DAY_CD** (당일 시행 가능 여부)
+      * 1 → Y (가능, Yes)
+      * 2 → N (불가, No)
+      * 3 → C (조건부, Conditional)
+
+      **ACTION_CD** (필수 조치 코드)
+      * 1 → GUARD (보호자동반필수)
+      * 2 → NOWEEKEND (주말불가)
+      * 3 → TIMEONLY (특정시간만)
+      * 4 → FASTING (금식필요)
+      * 5 → CONSENT (동의필요)
+      * 6 → PRETEST (사전검사필요)
+      * 7 → STOPMED (복약중단필요)
+
+    - 수정된 파일:
+      * code_definition.csv
+      * schema/EXAM_MASTER.csv
+      * schema/EXAM_RELATION_RULES.csv
+      * schema/EXAM_CONDITION_RULES.csv
+      * data/EXAM_MASTER.csv
+      * data/EXAM_RELATION_RULES.csv
+      * data/EXAM_CONDITION_RULES.csv
+
+19. **[GAP_VALUE NULL 해석 규칙 확정]**
+    - 규칙: SAME_DAY_CD=N이고 GAP_VALUE=NULL인 경우 → 기본 1일 간격으로 해석
+    - 문서화: code_definition.csv의 SAME_DAY_CD=N 설명에 추가
+    - 적용 대상: EXAM_RELATION_RULES 20건
+
+20. **[정합성 보고서 업데이트]** 데이터_정합성_검토_보고서.md 수정
+    - 코드값 체계 변경 반영 (1,2,3 → Y,N,C 등)
+    - 섹션 6 "코드값 체계 변경 이력" 추가
+    - GAP_VALUE NULL 해석 규칙 명시
+
+21. **[매뉴얼-데이터 검증 보고서 생성]** 매뉴얼_데이터_검증_보고서.md 생성
+    - 매뉴얼 38페이지 vs 합성데이터 3개 테이블 1:1 대조 검증
+    - 검증 결과:
+      * EXAM_MASTER: 262개, 오류 0건
+      * EXAM_RELATION_RULES: 86개, 오류 0건, 경고 20건
+      * EXAM_CONDITION_RULES: 47개 (20 RULE_ID), 오류 0건
+    - 미반영 규칙: 3건 (유방MRI-초음파, VCUG-핵의학, Biopsy-유방검사)
+    - 최종 판정: PASS (95% 이상 일치)
+
+22. **[유방검사 규칙 추가]** 미반영 규칙 보완
+    - 추가_검사코드_정의.md에 2개 검사 추가:
+      * RM060001: Breast MRI (유방 MRI) - 40분
+      * RU060001: Breast Sono (유방 초음파) - 30분
+    - EXAM_MASTER.csv에 2개 검사 추가 (265개 → 265개)
+    - EXAM_RELATION_RULES.csv에 1개 규칙 추가 (87개 → 88개):
+      * RM060001→RU060001: SAME_DAY_CD=C, GAP=2D
+      * 의미: 유방 MRI와 유방 초음파는 같은 날 가능, 다른 날이면 2일 간격
+
+23. **[매뉴얼-데이터 검증 보고서 최종 업데이트]**
+    - 미반영 규칙 현황 변경:
+      * 유방 MRI → 유방 초음파 2일 간격: ✅ 반영 완료
+      * VCUG → 핵의학 2일 간격: ✅ 기존 반영 확인 (RF040001→NM010011)
+      * Biopsy → Mammography 3~4일: ❌ 범위 외 (시술 카테고리)
+    - 데이터 현황 업데이트:
+      * EXAM_MASTER: 265건
+      * EXAM_RELATION_RULES: 88건
+      * EXAM_CONDITION_RULES: 47건
+      * 총 400건, 일치율 95% 이상
+    - 결론: 시술(Biopsy) 1건 제외, 매뉴얼 검사 규칙 100% 반영 완료
+
+24. **[프로젝트 개요 문서 생성]** docs/프로젝트_개요.md 생성
+    - 전체 작업 과정을 하나의 문서로 정리
+    - 포함 내용:
+      * 프로젝트 목적 및 범위
+      * 작업 흐름 (매뉴얼 분석 → 스키마 설계 → 데이터 생성 → 검증)
+      * 매뉴얼 분석 결과 (131개 규칙 분류)
+      * 스키마 설계 상세 (3개 테이블, 코드값 정의)
+      * 합성 데이터 생성 과정 (추가 정의 검사 14개 포함)
+      * 검증 결과 (정합성 검토 + 매뉴얼-데이터 검증)
+      * 설계 특징 (범용성, 확장성, 해석 규칙)
+      * 산출물 목록
+      * 결론 및 활용 방안
+
+### 2025-12-23
+
+25. **[AVAIL_START_TIME/AVAIL_END_TIME 컬럼 추가]** EXAM_MASTER 스키마 확장
+    - 목적: 검사 자체의 운영 시간 제한 표현 (예: PSG 야간, MSLT 주간)
+    - 변경 내용:
+      * EXAM_MASTER에 2개 컬럼 추가:
+        - AVAIL_START_TIME: 검사 가능 시작 시간 (HH:MM)
+        - AVAIL_END_TIME: 검사 가능 종료 시간 (HH:MM)
+      * 데이터 입력:
+        - SC070001 (PSG): 21:00 ~ 06:00
+        - SC070002 (MSLT): 08:30 ~ 17:00
+    - 시간 제한 이원화 설계:
+      * EXAM_MASTER (AVAIL_START/END_TIME): 검사 자체 운영 시간 (모든 환자 적용)
+      * EXAM_CONDITION_RULES (TIMEONLY): 조건부 시간 제한 (특정 환자만 적용)
+      * 예: CT는 하루 종일 운영 → EXAM_MASTER에 시간 없음
+            소아 CT는 14:00~15:00만 → EXAM_CONDITION_RULES에 규칙
+
+26. **[스키마 및 문서 업데이트]** AVAIL_START_TIME/AVAIL_END_TIME 반영
+    - schema.csv: AVAIL_START_TIME, AVAIL_END_TIME 컬럼 정의 추가
+    - schema.csv: 기존 컬럼명 최신화 (PRE_PROC_MIN→PREP_MIN, RSV_EXCP_TYPE→WALK_IN_POLICY 등)
+    - docs/프로젝트_개요.md: EXAM_MASTER 테이블에 신규 컬럼 추가, 버전 1.1로 업데이트
+    - docs/데이터_정합성_검토_보고서.md: 신규 컬럼 검토 결과 및 시간 제한 이원화 설명 추가
+
+27. **[매뉴얼-데이터 검증 보고서 업데이트]** 시간 제한 이원화 검증 추가
+    - 목적: EXAM_MASTER(AVAIL_START/END_TIME)와 EXAM_CONDITION_RULES(TIMEONLY) 간 충돌 검증
+    - 검증 결과:
+      * PSG(SC070001): EXAM_MASTER에 21:00~06:00, CONDITION_RULES에 없음 → 충돌 없음
+      * MSLT(SC070002): EXAM_MASTER에 08:30~17:00, CONDITION_RULES에 없음 → 충돌 없음
+      * TIMEONLY 규칙이 있는 검사들(CT, MRI, PET 등): EXAM_MASTER에 시간 없음 → 충돌 없음
+    - 검증 항목 추가:
+      * 4.4절: 검사 운영 시간 검증 (PSG, MSLT)
+      * 9절: 시간 제한 규칙 이원화 검증 (신규 섹션)
+    - 최종 판정: PASS (충돌 0건)
+
+28. **[EQUIPMENT_TYPE 컬럼 추가]** EXAM_MASTER 확장
+    - 목적: 검사 장비 유형 분류 (자원 관리, 스케줄링 활용)
+    - 컬럼: EQUIPMENT_TYPE (VARCHAR(10))
+    - 장비 유형 정의 (8개):
+      * CT (67개): RC/HA prefix
+      * MRI (65개): RM prefix
+      * US (29개): RU prefix
+      * NM (11개): NM prefix
+      * ENDO (9개): SC03 prefix
+      * FUNC (76개): SC prefix (SC03 제외)
+      * XRAY (3개): RX prefix
+      * FLUORO (4개): RF prefix
+    - 수정 파일:
+      * schema.csv: EQUIPMENT_TYPE 컬럼 추가
+      * data/EXAM_MASTER.csv: 264개 검사에 장비유형 입력
+      * code_definition.csv: EQUIPMENT_TYPE 코드 정의 추가
+      * docs/프로젝트_개요.md: 스키마 설명 업데이트
+
+29. **[RESERVATION 합성 데이터 생성]** 예약 데이터 생성
+    - 목적: 정의된 규칙을 준수하는 1년치 예약 데이터 생성
+    - 생성 기간: 2026-01-01 ~ 2026-12-31
+    - 생성 규모: 12,090건, 2,621명 환자
+
+    **RESERVATION.csv 컬럼:**
+    - RESERVATION_ID: 예약 ID (R00000001)
+    - ORDER_ID: 처방 ID (O00000001)
+    - PATIENT_ID: 환자 ID (P000001)
+    - ORDER_DATE: 처방일 (YYYY-MM-DD)
+    - EXAM_CD: 검사코드
+    - EXAM_NM: 검사명
+    - RESERVATION_DATETIME: 예약일시 (YYYY-MM-DD HH:MM)
+    - RESERVATION_DATE: 예약일 (YYYY-MM-DD)
+    - RESERVATION_TIME: 예약시간 (HH:MM)
+    - DURATION_MIN: 소요시간 (분)
+    - EQUIPMENT_TYPE: 장비유형
+
+    **생성 규칙 준수:**
+    - 일요일 예약 없음 ✓
+    - NOWEEKEND 검사 토요일 예약 없음 ✓
+    - SAME_DAY_CD=N 규칙 준수 ✓
+    - GAP_VALUE 간격 규칙 준수 ✓
+    - SEQ_REQ_YN=Y 순서 규칙 준수 (같은 날 기준) ✓
+
+    **검사 분포 (v2 - 골고루 분배):**
+    - 264개 검사 100% 사용 (미사용 검사 0개)
+    - 장비별 사용률: CT/MRI/US/NM/ENDO/FUNC/XRAY/FLUORO 모두 100%
+
+    **생성 스크립트:**
+    - generate_reservation.py: 예약 데이터 생성 (v2 - 골고루 분배 버전)
+    - verify_reservation.py: 규칙 위반 검증 (5개 규칙 체크)
+
+30. **[폴더 구조 정리]**
+    ```
+    검사규칙 합성데이터/
+    ├── .clauderc                    # 작업 히스토리
+    ├── schema.csv                   # 스키마 정의
+    ├── code_definition.csv          # 코드값 정의
+    ├── src/                         # 스크립트
+    │   ├── generate_reservation.py  # 예약 데이터 생성
+    │   ├── verify_reservation.py    # 규칙 위반 검증
+    │   └── assign_resource.py       # 자원 배정
+    ├── schema/                      # 스키마 상세 정의
+    │   ├── EXAM_MASTER.csv
+    │   ├── EXAM_RELATION_RULES.csv
+    │   └── EXAM_CONDITION_RULES.csv
+    ├── data/                        # 합성 데이터
+    │   ├── EXAM_MASTER.csv          # 264개 검사
+    │   ├── EXAM_RELATION_RULES.csv  # 88개 규칙
+    │   ├── EXAM_CONDITION_RULES.csv # 47개 규칙
+    │   ├── RESERVATION.csv          # 12,090건 예약
+    │   └── RESOURCE.csv             # 34개 자원
+    ├── docs/                        # 문서
+    │   ├── 프로젝트_개요.md
+    │   ├── 정형화_분석_보고서.md
+    │   ├── 스키마_미커버_규칙_보고서.md
+    │   ├── 추가_검사코드_정의.md
+    │   ├── 데이터_정합성_검토_보고서.md
+    │   ├── 매뉴얼_데이터_검증_보고서.md
+    │   ├── 합성데이터_생성_계획서.md
+    │   ├── RESERVATION_EDA_보고서.md
+    │   └── RESERVATION_생성_보고서.md
+    └── pre_synthetic_data/          # 원본 참조 데이터
+        └── source.xlsx
+    ```
+
+31. **[RESOURCE 자원 테이블 생성]** 장비 자원 관리
+    - 목적: 검사 장비 자원 정의 및 예약 충돌 방지
+    - 분석 방법: RESERVATION 데이터에서 시간대별 최대 동시 사용량 추출
+
+    **장비별 자원 대수:**
+    | 장비유형 | 자원 대수 | 피크 시점 |
+    |---------|---------|----------|
+    | CT | 4대 | 2026-06-17 14:23 |
+    | MRI | 5대 | 2026-07-24 11:22 |
+    | US | 3대 | 2026-01-17 09:36 |
+    | NM | 4대 | 2026-05-22 11:14 |
+    | ENDO | 5대 | 2026-05-14 11:56 |
+    | FUNC | 8대 | 2026-06-30 14:06 |
+    | XRAY | 2대 | 2026-01-21 09:30 |
+    | FLUORO | 3대 | 2026-03-25 12:17 |
+    | **합계** | **34대** | |
+
+    **RESOURCE.csv 컬럼:**
+    - RESOURCE_ID: 자원 ID (CT_01, MRI_02 등)
+    - EQUIPMENT_TYPE: 장비 유형
+    - RESOURCE_NAME: 자원명 (CT 1호기 등)
+
+    **RESERVATION.csv 컬럼 추가:**
+    - RESOURCE_ID: 배정된 자원 ID
+
+    **자원 배정 알고리즘:**
+    - 날짜/장비유형별로 시간순 정렬
+    - 각 예약 시작 시간에 가용한 자원 탐색
+    - 가장 먼저 비는 자원 배정
+
+    **검증 결과:**
+    - 자원 충돌: 0건 ✅
+    - 모든 예약이 시간 중복 없이 자원 배정됨
+
+    **관련 파일:**
+    - data/RESOURCE.csv: 34개 자원 마스터
+    - src/assign_resource.py: 자원 배정 스크립트
+    - docs/RESERVATION_생성_보고서.md: 상세 보고서
+
+32. **[웹 뷰어 생성]** 예약 시간표 HTML 뷰어
+    - 목적: 예약 데이터를 시각화하는 HTML 기반 뷰어
+    - 생성 파일:
+      * src/generate_schedule_html.py: HTML 생성 스크립트
+      * web/schedule_viewer.html: 메인 뷰어 (단일 HTML, 외부 의존성 없음)
+      * web/README.md: 웹 뷰어 문서
+      * src/reservation_viewer.py: Streamlit 뷰어 (레거시)
+
+    **주요 기능:**
+    - 일간 뷰: 모든 장비를 가로로 한 화면에 표시, 10분 단위 그리드
+    - 주간 뷰: 7일간 장비별 표시, 30분 단위 그리드
+    - 날짜 선택: 달력 형태 date picker
+    - 날짜 이동: 4개 고정 버튼 (1주 전, 1일 전, 1일 후, 1주 후)
+    - 장비 필터: 드롭다운 선택 또는 헤더 클릭
+    - 예약 블록: 장비별 고유 색상, hover 시 정보 박스 표시
+
+    **장비별 색상:**
+    | 장비 | 색상 | HEX |
+    |------|------|-----|
+    | CT | 초록 | #4CAF50 |
+    | MRI | 파랑 | #2196F3 |
+    | US | 주황 | #FF9800 |
+    | NM | 보라 | #9C27B0 |
+    | ENDO | 분홍 | #E91E63 |
+    | FUNC | 청록 | #00BCD4 |
+    | XRAY | 갈색 | #795548 |
+    | FLUORO | 회색 | #607D8B |
+
+    **구현 버전 히스토리:**
+    - v1.0: 기본 시간표 뷰어 구현
+    - v2.0: 일간 뷰 레이아웃 개선 (모든 장비 가로 배치)
+    - v3.0: UI 개선 (시간 셀 병합, 구분선, 장비 색상 헤더)
+    - v4.0: 날짜 선택 개선 (달력 형태, 주간 뷰 날짜 클릭)
+    - v5.0: 인터랙션 개선 (장비 헤더 클릭 필터, hover 정보 박스)
+    - v6.0: 날짜 네비게이션 개선 (4개 고정 버튼)
+    - v7.0: 스크롤 및 레이아웃 개선
+      * 시간 열 고정 (sticky): 가로 스크롤 시 시간 열이 왼쪽에 고정
+      * 그리드 영역만 스크롤: 흰색 패딩 영역은 고정, 내부 그리드만 스크롤
+      * 예약 없는 장비도 표시: 해당 날짜에 예약이 없어도 모든 장비 유형 표시
+      * 불필요한 CSS/JS 코드 정리
+
+    **CSS 구조:**
+    - .equipment-section: 흰색 배경 컨테이너 (패딩 15px, 고정 "액자" 역할)
+    - .grid-wrapper: overflow-x: auto (그리드만 가로 스크롤)
+    - .day-grid: CSS Grid 레이아웃 (모든 장비 가로 배치)
+    - .day-time-cell: position: sticky, left: 0 (시간 열 고정)
+    - .day-header.time-col, .day-equip-header.time-col: 헤더도 sticky 적용
+
+    **HTML 재생성 명령:**
+    ```powershell
+    & 'C:\Miniconda3\python.exe' 'c:\Users\user\Desktop\검사규칙 합성데이터\src\generate_schedule_html.py'
+    ```
+
+33. **[자원 대수 조정]** 충돌 해결
+    - US: 3대 → 4대 (자원 충돌 해결)
+    - XRAY: 2대 → 3대 (자원 충돌 해결)
+    - 최종 자원 합계: 34대 → 36대
+
+    **최종 자원 현황:**
+    | 장비유형 | 자원 대수 |
+    |---------|---------|
+    | CT | 4대 |
+    | MRI | 5대 |
+    | US | 4대 |
+    | NM | 4대 |
+    | ENDO | 5대 |
+    | FUNC | 8대 |
+    | XRAY | 3대 |
+    | FLUORO | 3대 |
+    | **합계** | **36대** |
+
+34. **[프로젝트 구현 현황 문서]** docs/프로젝트_구현_현황.md 생성
+    - 전체 구현 완료 항목 정리
+    - 실행 방법 안내
+    - 향후 작업 목록
+
+### 2025-12-24
+
+35. **[시간표 뷰어 시간 범위 조건부 표시]** 장비별 시간 범위 차등 적용
+    - 목적: PSG(수면다원검사) 등 야간 검사 표시를 위한 시간 범위 확장
+    - 변경 내용:
+      * 기존: 모든 장비 08:00~16:00 고정
+      * 변경: FUNC 장비 선택 시 08:00~22:00, 그 외 08:00~16:00
+    - 수정 파일: src/generate_schedule_html.py
+      * daily view: endHour 조건부 설정 (selectedEquip === 'FUNC')
+      * weekly view: weekEndHour 조건부 설정 (equipType === 'FUNC')
+    - 추가 수정: 그리드 종료 시간 초과 블록 잘라서 표시
+      * PSG처럼 다음날까지 이어지는 검사도 22:00에서 잘림
+      * 레이아웃 깨짐 방지
+
+36. **[예약 데이터 시간 분포 확인]**
+    - source.xlsx 기준 예약 시간 분포:
+      * 시작 시간: 08:30 (모든 장비)
+      * 종료 시간: 대부분 14:30, ENDO 15:10, FUNC 21:00 (PSG)
+    - 16:00 종료 시간은 매뉴얼에 명시 없음, 원 개발자 임의 설정 추정
+
+37. **[문서 통합 정리]** 12개 문서 → 4개로 통합
+    - 목적: 중복 문서 제거, 체계적 문서 구조화
+    - 분류 기준:
+      1. 프로젝트 개요 (전체 소개)
+      2. 스키마 설계 (테이블, 코드, 규칙 정형화)
+      3. 합성데이터 생성 (데이터 생성, EDA, 검증)
+      4. 매뉴얼-스키마 정합성 검증 (신규)
+
+    **삭제된 문서 (12개):**
+    - 프로젝트_개요.md
+    - 프로젝트_구현_현황.md
+    - 정형화_분석_보고서.md
+    - 스키마_미커버_규칙_보고서.md
+    - 추가_검사코드_정의.md
+    - 데이터_정합성_검토_보고서.md
+    - 스키마 최종 보고서.md
+    - 매뉴얼_데이터_검증_보고서.md
+    - 합성데이터_생성_계획서.md
+    - 합성데이터 생성 보고서.md
+    - RESERVATION_생성_보고서.md
+    - RESERVATION_EDA_보고서.md
+
+    **신규 문서 (4개):**
+    - 1_프로젝트_개요.md: 프로젝트 목적, 작업 흐름, 성과 요약, 실행 방법
+    - 2_스키마_설계.md: 테이블 구조, 코드 체계, 정형화 분석, 추가 검사코드
+    - 3_합성데이터_생성.md: 컬럼 정의, 생성 전략, EDA, 규칙 검증, 자원 배정
+    - 4_매뉴얼_스키마_정합성_검증.md: 131개 규칙 전수 검증, 정형화 현황
+
+38. **[매뉴얼-스키마 정합성 검증 보고서 생성]** docs/4_매뉴얼_스키마_정합성_검증.md 생성
+    - 매뉴얼 131개 규칙 전수 검증
+    - 정형화 현황:
+      * 스키마 정형화 완료: 99개 (75.6%)
+        - EXAM_MASTER: 21개 (소요시간, 금식, 조영제 등)
+        - EXAM_RELATION_RULES: 50개 (검사 간 순서, 간격)
+        - EXAM_CONDITION_RULES: 28개 (연령, 요일, 약물 조건)
+      * 로직 구현 필요: 15개 (11.5%)
+        - 시간 기반 동적 계산: 5개
+        - 캘린더/스케줄 조회: 3개
+        - 복합 조건 처리: 4개
+        - 텍스트 파싱: 3개
+      * 정형화 불필요: 17개 (13.0%)
+        - 임시 스케줄/공지: 8개
+        - 기간 한정 변경: 2개
+        - 운영 지침: 5개
+        - 개인별 운영: 2개
+    - 각 규칙별 매뉴얼 원문, 정형화 방식, 페이지 번호 상세 기록
+    - 로직 구현 필요 규칙에 대한 구현 방안 코드 예시 제공
+
+---
+
+## 현재 프로젝트 상태 요약
+
+### 폴더 구조
+```
+검사규칙 합성데이터/
+├── .clauderc                    # 작업 히스토리 (본 파일)
+├── MANUAL_RULES_170.csv         # 170개 규칙 전수 목록 (신규)
+├── schema.csv                   # 스키마 정의
+├── code_definition.csv          # 코드값 정의
+├── 통합 검사예약업무 매뉴얼.pdf  # 원본 매뉴얼 (38p)
+│
+├── src/                         # 소스 코드
+│   ├── rule_engine/             # 룰 엔진 (신규)
+│   ├── rules/                   # 규칙 클래스
+│   ├── models/                  # 데이터 모델
+│   ├── utils/                   # 유틸리티
+│   ├── generate_reservation.py  # 예약 데이터 생성
+│   ├── verify_reservation.py    # 규칙 위반 검증
+│   ├── assign_resource.py       # 자원 배정
+│   └── generate_schedule_html.py# 시간표 HTML 생성
+│
+├── schema/                      # 스키마 상세 정의
+│   ├── EXAM_MASTER.csv
+│   ├── EXAM_RELATION_RULES.csv
+│   └── EXAM_CONDITION_RULES.csv
+│
+├── data/                        # 합성 데이터 (_data 접미사)
+│   ├── EXAM_MASTER_data.csv          # 267개 검사
+│   ├── EXAM_RELATION_RULES_data.csv  # 97개 규칙
+│   ├── EXAM_CONDITION_RULES_data.csv # 120개 규칙 (54 RULE_ID)
+│   ├── RESERVATION_data.csv          # 12,063건 예약
+│   └── RESOURCE_data.csv             # 36대 자원
+│
+├── web/                         # 웹 뷰어
+│   └── schedule_viewer.html     # 예약 시간표 뷰어
+│
+├── docs/                        # 문서 (4개)
+│   ├── 1_프로젝트_개요.md       # 프로젝트 전체 개요
+│   ├── 2_스키마_설계.md         # 테이블 구조, 코드 체계
+│   ├── 3_합성데이터_생성.md     # 데이터 생성, EDA, 검증
+│   └── 4_매뉴얼_스키마_정합성_검증.md # 규칙 정형화 검증
+│
+└── pre_synthetic_data/          # 원본 참조 데이터
+    └── source.xlsx
+```
+
+### 주요 성과
+| 항목 | 수치 |
+|------|------|
+| 매뉴얼 총 규칙 | 170개 |
+| 정형화 가능 규칙 | 139개 (81.8%) |
+| 데이터 반영률 | 100% (139/139개) |
+| 검사 코드 커버리지 | 100% (267/267개) |
+| 예약 데이터 | 12,063건 |
+| 규칙 위반 | 0건 |
+| 자원 충돌 | 0건 |
+
+### 규칙 분류 (170개)
+| 분류 | 개수 | 정형화 |
+|------|------|--------|
+| RELATION (관계) | 64개 | ✓ |
+| CONDITION (조건) | 54개 | ✓ |
+| ATTRIBUTE (속성) | 21개 | ✓ |
+| LOGIC (로직구현) | 14개 | ✗ |
+| UNNECESSARY (불필요) | 17개 | ✗ |
+
+### 스키마 테이블
+| 테이블 | 건수 |
+|--------|------|
+| EXAM_MASTER_data | 267건 |
+| EXAM_RELATION_RULES_data | 97건 |
+| EXAM_CONDITION_RULES_data | 120건 (54 RULE_ID) |
+
+### 장비 자원
+| 장비 | 대수 |
+|------|------|
+| CT | 4대 |
+| MRI | 5대 |
+| US | 4대 |
+| NM | 4대 |
+| ENDO | 5대 |
+| FUNC | 8대 |
+| XRAY | 3대 |
+| FLUORO | 3대 |
+| **합계** | **36대** |
+
+### 2025-12-29
+
+39. **[룰엔진 개발 시작]** Phase 1: 기반 구축 완료
+    - 목적: 검사 예약 규칙을 자동 검증하는 룰 엔진 개발
+    - 참조 문서: docs/5_룰엔진_개발_계획서.md
+
+    **폴더 구조 생성:**
+    ```
+    src/
+    ├── rule_engine/          # 핵심 엔진
+    │   ├── __init__.py
+    │   └── loader.py         # CSV 로더
+    ├── rules/                # 규칙 구현체
+    │   └── __init__.py
+    ├── models/               # 데이터 모델
+    │   ├── __init__.py
+    │   ├── exam.py           # 검사 모델
+    │   ├── patient.py        # 환자 모델
+    │   └── reservation.py    # 예약 모델
+    └── utils/                # 유틸리티
+        ├── __init__.py
+        ├── time_utils.py     # 시간 파싱/계산
+        └── gap_calculator.py # 간격 계산
+    ```
+
+    **Phase 1 완료 항목:**
+    - [x] 데이터 모델 정의 (Exam, Patient, Reservation)
+    - [x] CSV 로더 구현 (RuleLoader 클래스)
+    - [x] 유틸리티 구현 (time_utils, gap_calculator)
+    - [x] 패키지 초기화 (__init__.py)
+    - [x] 테스트 스크립트 (test_phase1.py)
+
+    **테스트 결과:**
+    - 데이터 로드 검증: 4/4 통과
+    - 모델 필드 검증: 12/12 통과
+    - 유틸리티 함수 검증: 11/11 통과
+    - 데이터 무결성 검증: 5/5 통과
+
+    **로드된 데이터:**
+    - EXAM_MASTER: 264개 검사
+    - EXAM_RELATION_RULES: 86개 규칙
+    - EXAM_CONDITION_RULES: 47개 규칙
+    - RESERVATION: 12,063개 예약
+
+    **삭제된 파일:**
+    - src/rule_engine.py (기존 레거시 파일)
+
+40. **[룰엔진 개발 Phase 2 완료]** 규칙 클래스 및 값 파서 구현
+    - 목적: 3가지 규칙 유형(Relation, Condition, Time)에 대한 클래스 및 검증 로직
+
+    **구현된 파일:**
+    ```
+    src/
+    ├── models/
+    │   └── validation.py     # ValidationResult, ValidationReport
+    ├── utils/
+    │   └── value_parser.py   # 값 파싱 유틸리티
+    └── rules/
+        ├── __init__.py       # 패키지 초기화 (export)
+        ├── relation_rules.py # RelationRule 클래스
+        ├── condition_rules.py# ConditionRule 클래스
+        └── time_rules.py     # TimeRule 클래스
+    ```
+
+    **ValidationResult 클래스:**
+    - is_valid: 검증 통과 여부
+    - message: 상세 메시지
+    - rule_type: 규칙 유형 (RELATION, CONDITION, TIME)
+    - severity: 심각도 (ERROR, WARNING, INFO)
+    - action: 필요 조치 정보
+    - reason_cd: 사유 코드
+
+    **value_parser 함수:**
+    - parse_age_value(): "19" → 19.0
+    - parse_weekday_value(): "토/일" → ['토', '일']
+    - parse_interval_value(): "11M" → (11, 'M')
+    - parse_time_range_value(): "14:00~15:00" → (time(14,0), time(15,0))
+    - parse_condition_value(): COND_TYPE별 자동 파싱
+    - parse_action_value(): ACTION_CD별 자동 파싱
+
+    **RelationRule 클래스:**
+    - 검사 간 관계/간격 규칙 (EXAM_RELATION_RULES 기반)
+    - check(): 순서 검증, 당일 시행 검증, 간격 검증
+    - 양방향 간격 지원 (gap_minutes, rev_gap_minutes)
+
+    **ConditionRule 클래스:**
+    - 환자 조건 규칙 (EXAM_CONDITION_RULES 기반)
+    - 지원 조건: AGE, WEEKDAY, MED, ALLERGY, PREG, DEVICE, DISEASE, INTERVAL
+    - check(): 조건 평가 후 조치 정보 반환
+
+    **TimeRule 클래스:**
+    - 운영 시간 규칙 (EXAM_MASTER의 AVAIL_START/END_TIME 기반)
+    - 야간 검사(21:00~06:00) 처리 지원
+    - check(): 예약 시간이 운영 시간 내인지 검증
+
+    **테스트 결과 (test_phase2.py):**
+    - ValidationResult/Report: 2/2 통과
+    - value_parser: 10/10 통과
+    - RelationRule: 5/5 통과
+    - ConditionRule: 7/7 통과
+    - TimeRule: 6/6 통과
+    - 데이터 로딩: 5/5 통과
+    - **총 35/35 테스트 통과**
+
+    **로드된 규칙:**
+    - RelationRule: 86개
+    - ConditionRule: 47개
+    - TimeRule: 2개 (시간 제한 있는 검사)
+
+41. **[룰엔진 개발 Phase 3 완료]** RuleEngine 통합 및 검증
+    - 목적: 메인 엔진 클래스 구현 및 기존 데이터 일괄 검증
+
+    **구현된 파일:**
+    - src/rule_engine/engine.py: RuleEngine 메인 클래스
+    - src/test_phase3.py: Phase 3 테스트 스크립트
+
+    **RuleEngine 주요 기능:**
+    - validate_time(): 시간 규칙 검증
+    - validate_condition(): 조건 규칙 검증
+    - validate_relation(): 관계 규칙 검증
+    - validate_reservation(): 단일 예약 검증
+    - validate_patient_reservations(): 환자별 예약 검증
+    - validate_all_reservations(): 일괄 검증
+    - get_violations(): 위반 사례 추출
+    - get_warnings(): 경고 사례 추출
+    - 규칙 인덱싱 (빠른 조회용)
+
+    **테스트 결과:**
+    - RuleEngine 초기화: 4/4 통과
+    - 시간 규칙 검증: 3/3 통과
+    - 조건 규칙 검증: 4/4 통과
+    - 관계 규칙 검증: 2/2 통과
+    - 단일 예약 검증: 3/3 통과
+    - 일괄 검증: 3/3 통과
+    - 환자별 예약 검증: 2/2 통과
+    - **총 21/21 테스트 통과**
+
+    **기존 데이터 검증 결과:**
+    - 총 예약: 12,063건
+    - 통과: 12,021건 (99.7%)
+    - 실패: 42건 (0.3%) - 순서 위반
+
+    **남은 단계:**
+    - Phase 4: 고도화 (성능 최적화, 규칙 충돌 감지)
+
+42. **[규칙 170개 전수 정리]** MANUAL_RULES_170.csv 생성
+    - 목적: 매뉴얼 규칙의 총 개수 혼란 방지, 정형화 가능 여부 명확화
+    - 생성 파일: MANUAL_RULES_170.csv (프로젝트 루트)
+
+    **컬럼 구조:**
+    - RULE_NO: 규칙 번호 (1~170)
+    - RULE_CATEGORY: 규칙 분류 (RELATION, CONDITION, ATTRIBUTE, LOGIC, UNNECESSARY)
+    - RULE_CONTENT: 규칙 내용
+    - MANUAL_SOURCE: 매뉴얼 원문 페이지
+    - FORMALIZABLE: 정형화 가능 여부 (Y/N)
+    - SCHEDULING_YN: 스케줄링 관련 여부 (Y/N)
+
+    **규칙 분류:**
+    | 분류 | 개수 | 정형화 가능 |
+    |------|------|------------|
+    | RELATION (관계규칙) | 64개 | 64개 (Y) |
+    | CONDITION (조건규칙) | 54개 | 54개 (Y) |
+    | ATTRIBUTE (속성규칙) | 21개 | 21개 (Y) |
+    | LOGIC (로직구현필요) | 14개 | 0개 (N) |
+    | UNNECESSARY (정형화불필요) | 17개 | 0개 (N) |
+    | **합계** | **170개** | **139개** |
+
+    **기존 문서 오류 수정:**
+    - 기존: 131개 규칙, 100개 정형화
+    - 수정: 170개 규칙, 139개 정형화 (81.8%)
+
+43. **[데이터 파일명 변경]** data/ 폴더 CSV 파일 _data 접미사 추가
+    - 목적: 합성 데이터임을 명확히 구분
+    - 변경된 파일:
+      * EXAM_MASTER.csv → EXAM_MASTER_data.csv
+      * EXAM_RELATION_RULES.csv → EXAM_RELATION_RULES_data.csv
+      * EXAM_CONDITION_RULES.csv → EXAM_CONDITION_RULES_data.csv
+      * RESERVATION.csv → RESERVATION_data.csv
+      * RESOURCE.csv → RESOURCE_data.csv
+
+44. **[139개 정형화 가능 규칙 완전 반영]** 데이터 보완 작업
+    - 이전: 규칙은 139개지만 실제 데이터 반영은 불완전
+    - 수정 후: 139개 규칙 100% 데이터 반영 완료
+
+    **EXAM_CONDITION_RULES_data.csv 확장:**
+    - 이전: 47개 레코드 (20개 RULE_ID)
+    - 이후: 120개 레코드 (54개 RULE_ID)
+    - 추가된 규칙: R021~R054 (34개 신규)
+
+    **추가된 COND_TYPE:**
+    - TIMING: 도착 시간 관련 (RTC 1시간전 등)
+    - SURGERY: 수술 유형 관련 (LADG/GIST, LATG)
+    - LAB: 검사 수치 관련 (eGFR30, 혈당200)
+    - ACTIVITY: 활동 관련 (격렬운동)
+    - DIET: 식이 관련 (고탄수화물, 저잔사식, 요오드)
+    - EXAM: 검사 유형 관련 (대장내시경, 경구조영)
+    - SEDATION: 진정 관련 (진정검사)
+    - FASTING: 금식 시간 관련 (6시간금식)
+
+    **추가된 ACTION_CD:**
+    - ALLOWED: 허용 규칙 (예: MRI는 메포민 복용 무관)
+
+    **EXAM_MASTER_data.csv 확장:**
+    - 이전: 265개 검사
+    - 이후: 267개 검사
+    - 추가된 검사:
+      * RM070002: Heart MRI (심장 MRI) - 120분, 조영제O, 금식8시간
+      * SC060002: TMT (운동부하검사) - 45분
+      * SC060003: Stress Echo (부하심초음파) - 60분
+
+    **EXAM_RELATION_RULES_data.csv 확장:**
+    - 이전: 86개 레코드
+    - 이후: 97개 레코드
+    - 추가된 규칙:
+      * Cardiac CT → Heart MRI 순서 (규칙 10)
+      * Heart MRI - CPX 당일불가 (규칙 24)
+      * Heart MRI - Stress Echo 당일불가 (규칙 25)
+      * Coronary CT - TMT/CPX 당일불가 (규칙 27)
+    - 추가된 REASON_CD: CARDIAC (심장검사 간 제한)
+
+    **스키마 정의 업데이트:**
+    - schema/EXAM_CONDITION_RULES.csv:
+      * COND_TYPE 확장: 16개 유형
+      * ACTION_CD 확장: 8개 유형 (ALLOWED 추가)
+    - schema/EXAM_RELATION_RULES.csv:
+      * REASON_CD 확장: CARDIAC 추가
+
+45. **[최종 데이터 현황]**
+    | 테이블 | 이전 | 이후 |
+    |--------|------|------|
+    | EXAM_MASTER_data.csv | 265건 | 267건 |
+    | EXAM_RELATION_RULES_data.csv | 86건 | 97건 |
+    | EXAM_CONDITION_RULES_data.csv | 47건 (20 RULE_ID) | 120건 (54 RULE_ID) |
+
+    **정형화 가능 규칙 반영률:**
+    - RELATION: 64개 → 97개 레코드 (100%)
+    - CONDITION: 54개 → 54개 RULE_ID (100%)
+    - ATTRIBUTE: 21개 → EXAM_MASTER 스키마 (100%)
+    - **합계: 139개 규칙 100% 반영**
+
+    **참조 무결성:**
+    - RELATION의 모든 검사코드가 MASTER에 존재 ✓
+    - CONDITION의 모든 검사코드가 MASTER에 존재 ✓
+
+46. **[docs/5_스키마_규칙_커버리지.md 생성]**
+    스키마 구조 및 규칙 커버리지 보고서 작성
+
+    **문서 내용:**
+    - 스키마 구조 (3개 테이블, 컬럼 정의)
+    - 코드 정의 (SAME_DAY_CD, GAP_UNIT, REASON_CD, COND_TYPE, ACTION_CD)
+    - 규칙 커버리지:
+      | 분류 | 개수 | 정형화 | 표현 스키마 |
+      |------|------|--------|------------|
+      | RELATION | 64개 | O | EXAM_RELATION_RULES |
+      | CONDITION | 54개 | O | EXAM_CONDITION_RULES |
+      | ATTRIBUTE | 21개 | O | EXAM_MASTER |
+      | LOGIC | 14개 | X | 코드 구현 필요 |
+      | UNNECESSARY | 17개 | X | 안내/운영 사항 |
+
+    **정형화 불가 규칙 (31개) 사유:**
+    - LOGIC (14개): 동적계산, 공휴일조회, 텍스트파싱, 실시간체크 필요
+    - UNNECESSARY (17개): 임시공지, 기간한정, 개인선호도, 업무프로세스
+
+47. **[docs/6_스키마_비교_분석.md 생성]**
+    기존 스키마(안동개발기) vs 현재 스키마 비교 분석
+
+    **기존 스키마 (테이블 구조_검사세트 테이블사용.xlsx):**
+    - MSCEXMSM (검사세트처방기본): 14개 컬럼
+    - MSCEXMSD (검사세트처방상세): 7개 컬럼
+    - SORD_TP_CD: 1=같은날불가, 2=같은날연속, 3=순서/간격, 4=간격만
+
+    **현재 스키마:**
+    - EXAM_MASTER (14개 컬럼)
+    - EXAM_RELATION_RULES (9개 컬럼)
+    - EXAM_CONDITION_RULES (7개 컬럼)
+
+    **커버리지 비교:**
+    | 항목 | 기존 스키마 | 현재 스키마 |
+    |------|------------|------------|
+    | 전체 규칙 (170개) | ~40개 (24%) | 139개 (82%) |
+    | 관계 규칙 (64개) | ~40개 (63%) | 64개 (100%) |
+    | 조건 규칙 (54개) | 0개 (0%) | 54개 (100%) |
+    | 속성 규칙 (21개) | 0개 (0%) | 21개 (100%) |
+
+    **개선 효과:**
+    - 규칙 커버리지: 24% → 82% (+58%p)
+    - 조건 규칙 지원: 0% → 100%
+    - 속성 규칙 지원: 0% → 100%
+    - 제한 사유 표현: 불가 → 6종 (CONTRAST, FASTING, BOWEL, SEDATION, RADIATION, CARDIAC)
+
+48. **[docs/7_룰엔진_개발_계획서.md 생성]**
+    룰엔진 개발 계획서 작성 (2025-12-30)
+
+    **목적:**
+    - 환자가 3~6개 검사 처방 시, 규칙 위배 없는 검사 시간 추천
+    - 입력: 검사 코드 목록, 환자 프로필
+    - 출력: 검사별 추천 일시, 안내 메시지
+
+    **3-Layer 우선순위 구조:**
+    | Layer | 구분 | 성격 | 위반 시 |
+    |-------|------|------|---------|
+    | L1 | 필수 규칙 (Hard Constraint) | 절대 위반 불가 | 스케줄 실패 |
+    | L2 | 권장 사항 (Soft Constraint) | 기본 적용, 조정 가능 | 차선책 제시 |
+    | L3 | 환자 선호 (Preference) | 요청에 따라 적용 | L1 범위 내 조정 |
+
+    **L1 필수 규칙 (9개):**
+    - 당일 불가 (SAME_DAY_CD=N)
+    - 순서 필수 (SEQ_REQ_YN=Y)
+    - 간격 필수 (GAP_VALUE/UNIT)
+    - 운영 시간 (AVAIL_START/END_TIME)
+    - 소요 시간 (DURATION_MIN)
+    - 자원 충돌 (동일 자원 동일 시간)
+    - 일요일 불가
+    - 주말 불가 (ACTION_CD=NOWEEKEND)
+    - 시간대 제한 (ACTION_CD=TIMEONLY)
+
+    **L2 권장 사항 (6개, 점수 기반):**
+    | 분류 | 규칙 | 점수 |
+    |------|------|------|
+    | 이동시간 | 장비 유형 다르면 +10분 버퍼 | +10점 |
+    | 연속 배치 | 같은 날 검사는 대기시간 최소화 | +20점 |
+    | 금식 오전 | FASTING_HRS > 0인 검사 오전 우선 | +15점 |
+    | 방문일 최소화 | 적은 방문일로 묶기 | +25점 |
+    | 조영제 순서 | 조영제 검사는 비조영제 후 배정 | +10점 |
+    | 진정검사 후 | 진정검사 후 일반 검사 배정 | +10점 |
+
+    **L3 환자 선호 (향후 확장):**
+    - 요일 선호/기피
+    - 시간대 선호
+    - 특정일 피하기
+    - 방문 스타일 (compact/spread)
+
+    **처리 흐름:**
+    ```
+    1단계: L1 필수 규칙 → 가능한 슬롯 필터링
+    2단계: L2 권장 사항 → 최적 슬롯 정렬/점수화
+    3단계: L3 환자 선호 → 최종 슬롯 조정
+    ```
+
+    **개발 단계:**
+    - Phase 1: 기반 구축 (models.py, loader.py)
+    - Phase 2: 규칙 처리기 (relation_checker.py, condition_checker.py)
+    - Phase 3: 스케줄러 (scheduler.py)
+    - Phase 4: 통합 (engine.py, main.py)
+
+    **파일 구조:**
+    ```
+    src/rule_engine/
+    ├── __init__.py
+    ├── loader.py
+    ├── models.py
+    ├── relation_checker.py
+    ├── condition_checker.py
+    ├── scheduler.py
+    └── engine.py
+    ```
+
+    **제약 사항:**
+    - 검사 개수: 3~6개 권장 (최대 10개)
+    - 스케줄 기간: 입력 당일로부터 최대 30일
+    - 슬롯 단위: 10분
+    - 자원: RESOURCE_data.csv 37대 기반

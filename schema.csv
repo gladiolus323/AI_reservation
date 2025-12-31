@@ -1,0 +1,40 @@
+﻿검사 기본 정보 마스터 (EXAM_MASTER),,
+컬럼명 (ID),설명 (Description),데이터 예시 및 비고
+EXAM_CD,검사 고유 코드,"CT001, MR002 등"
+EXAM_NM,검사명,"CT: Abdomen, MRI Brain 등"
+DURATION_MIN,검사 표준 소요 시간 (분),"PET 120분, MRI 40~50분"
+PREP_MIN,검사 전 필수 대기/준비 시간 (분),"진정 검사: 60분 전 내원, 관장: 30분 전"
+WALK_IN_POLICY,예약 없이 방문 시 대응 정책,"A: 즉시허용, C: 통화후허용, R: 예약필수"
+RESULT_DAYS,결과 도출 소요 일수,"0: 당일, 3: 3일 후 등"
+FASTING_HRS,필요 금식 시간,"8: 8시간, 6: 6시간, 12: 12시간"
+CONTRAST_YN,조영제 사용 여부,"Y: 사용, N: 미사용"
+SEDATION_YN,진정(수면) 검사 여부,"Y: 진정검사, N: 일반검사"
+MIN_AGE,최소 허용 연령 (만 나이),"0: 제한없음, 9: 9세 이상, 15: 15세 이상"
+MAX_AGE,최대 허용 연령 (만 나이),"NULL: 제한없음, 3: 3세 이하, 15: 15세 이하"
+AVAIL_START_TIME,검사 가능 시작 시간,"HH:MM 형식, NULL: 제한없음 (예: 21:00)"
+AVAIL_END_TIME,검사 가능 종료 시간,"HH:MM 형식, NULL: 제한없음 (예: 06:00)"
+EQUIPMENT_TYPE,검사 장비 유형,"CT, MRI, US(초음파), NM(핵의학), ENDO(내시경), FUNC(기능검사), XRAY(일반촬영), FLUORO(투시촬영)"
+,,
+
+검사 간 관계 및 간격 마스터 (EXAM_RELATION_RULES),,
+컬럼명 (ID),설명 (Description),데이터 예시 및 비고
+EXAM_A,선행(기준) 검사 코드,CT (조영제 사용 건)
+EXAM_B,후행(대상) 검사 코드,BMD (골밀도)
+SEQ_REQ_YN,순서 필수 여부,"Y: 순서 필수, N: 순서 무관"
+SAME_DAY_CD,당일 시행 가능 여부 코드,"Y: 가능, N: 불가, C: 조건부가능"
+GAP_VALUE,최소 필수 간격 수치,3 (조영제 배출 대기)
+GAP_UNIT,간격 단위,"D: Day, H: Hour, M: Minute"
+REASON_CD,불가/제한 사유 코드,"CONTRAST, FASTING, BOWEL, SEDATION, RADIATION"
+REV_GAP_VALUE,역방향(B→A) 간격 수치,"NULL: 정방향과 동일, 7 (투시→CT 7일 등)"
+REV_GAP_UNIT,역방향(B→A) 간격 단위,"NULL: 정방향과 동일, D/H/M"
+,,
+
+조건부 예외 규칙 마스터 (EXAM_CONDITION_RULES),,
+컬럼명 (ID),설명 (Description),데이터 예시 및 비고
+RULE_ID,규칙 식별자 (그룹 키),동일 ID 내 조건은 모두 만족해야 함 (AND)
+EXAM_CD,대상 검사 코드,FK (EXAM_MASTER와 연결)
+COND_TYPE,조건 종류,"AGE, MED, ALLERGY, PREG, DISEASE, DEVICE, WEEKDAY, INTERVAL"
+COND_OP,비교 연산자,"=, <, >, <=, >=, !=, STOP, IN"
+COND_VAL,조건 기준값,"15(세), Metformin(약물), Y(임신여부)"
+ACTION_CD,필수 조치 코드,"GUARD: 보호자동반, NOWEEKEND: 주말불가, TIMEONLY: 시간제한, FASTING: 금식조정, CONSENT: 동의필요, PRETEST: 사전검사, STOPMED: 약물중단"
+ACTION_VAL,조치 상세 값,"48H(중단시간), 보호자동반, 14:00~15:00(시간제한)"
